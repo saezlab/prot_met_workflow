@@ -38,8 +38,8 @@ proteomics_DE_t <- proteomics_DE_t %>%
 cosmos_prot_input <- proteomics_DE_t$t
 names(cosmos_prot_input) <- proteomics_DE_t$ID
 
-cosmos_met_input <- cosmos_met_input[which(abs(cosmos_met_input) > 4)]
-cosmos_prot_input <- cosmos_prot_input[which(abs(cosmos_prot_input) > 8)]
+cosmos_met_input <- cosmos_met_input[which(abs(cosmos_met_input) > 3)]
+cosmos_prot_input <- cosmos_prot_input[which(abs(cosmos_prot_input) > 6)]
 
 cosmos_met_input <- prepare_metab_inputs(cosmos_met_input, c("c","m"))
 
@@ -63,10 +63,10 @@ sig_input <- cosmosR:::filter_input_nodes_not_in_pkn(cosmos_prot_input, meta_net
 test_for <- preprocess_COSMOS_signaling_to_metabolism(meta_network = meta_network,
                                                       signaling_data = sig_input,
                                                       metabolic_data = metab_input,
-                                                      maximum_network_depth = 3,
+                                                      maximum_network_depth = 4,
                                                       CARNIVAL_options = my_options)
 
-my_options$timelimit <- 300
+my_options$timelimit <- 600
 
 test_result_for <- run_COSMOS_signaling_to_metabolism(data = test_for,
                                                       CARNIVAL_options = my_options)
@@ -77,3 +77,9 @@ SIF <- formatted_res[[1]]
 ATT <- formatted_res[[2]]
 
 SIF <- SIF[which(SIF$Weight != 0),]
+
+ATT <- merge(ATT, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
+ATT$Nodes <- gsub(",","_",ATT$Nodes)
+
+write_csv(SIF, file = paste("results/", "SIF.csv", sep = ""))
+write_csv(ATT, file = paste("results/", "ATT.csv", sep = ""))
