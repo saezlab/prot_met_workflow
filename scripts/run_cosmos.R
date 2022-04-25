@@ -6,10 +6,6 @@ library(decoupleR)
 data("meta_network")
 meta_network <- meta_network[which(meta_network$source != meta_network$target),]
 
-#
-saveRDS(meta_network, file = paste("results/", "meta_network_lung.RData", sep = ""))
-#
-
 metabolomics_DE_t <- as.data.frame(read_delim("data/metabolomics_DE_t_TUvsNG.txt", 
                                               delim = "\t", escape_double = FALSE, 
                                               trim_ws = TRUE))
@@ -39,9 +35,6 @@ proteomics_DE_t <- proteomics_DE_t %>%
   mutate(ID = strsplit(as.character(ID), ";")) %>%
   unnest(ID) %>%
   filter(ID != "")
-#
-write_csv(proteomics_DE_t, file = paste("results/", "proteomics_DE_t.csv", sep = ""))
-#
 
 cosmos_prot_input <- proteomics_DE_t$t
 names(cosmos_prot_input) <- proteomics_DE_t$ID
@@ -100,13 +93,10 @@ nodes_ORA = extract_nodes_for_ORA(
 
 saveRDS(nodes_ORA, file = paste("results/", "nodes_ORA_lung.RData", sep = ""))
 
+
 # include backwards run
 
-
 my_options$timelimit <- 1800
-
-
-# meta_network <- meta_network[-which(meta_network$source == meta_network$target),]
 
 test_back <- preprocess_COSMOS_metabolism_to_signaling(meta_network = meta_network,
                                                        signaling_data = sig_input,
@@ -123,15 +113,14 @@ formatted_res_back <- format_COSMOS_res(test_result_back)
 
 SIF_back <- formatted_res_back[[1]]
 ATT_back <- formatted_res_back[[2]]
-#
+
 SIF_back <- SIF_back[which(SIF_back$Weight != 0),]
 
 
-# t-values should be the same!!!
-t <- c(NA)
-ATT_back <- cbind(ATT_back, t)
+ATT_back <- merge(ATT_back, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
+ATT_back$Nodes <- gsub(",","_",ATT_back$Nodes)
 
-#
+
 write_csv(SIF_back, file = paste("results/",paste("SIF_back.csv",sep = ""), sep = ""))
 write_csv(ATT_back, file = paste("results/",paste("ATT_back.csv",sep = ""), sep = ""))
 
