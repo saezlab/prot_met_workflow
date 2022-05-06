@@ -136,5 +136,13 @@ ATT_full <- as.data.frame(ATT_full)
 write_csv(SIF_full, file = paste("results/",paste("SIF_full.csv",sep = ""), sep = ""))
 write_csv(ATT_full, file = paste("results/",paste("ATT_full.csv",sep = ""), sep = ""))
 
+# extract for ORA full
+
+nodes_ORA_full = extract_nodes_for_ORA(
+  sif = SIF_full, 
+  att = ATT_full)
+
+saveRDS(nodes_ORA_full, file = paste("results/", "nodes_ORA_lung_full.RData", sep = ""))
+
 
 
