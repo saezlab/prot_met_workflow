@@ -63,24 +63,32 @@ metabolomics_NG <- metabolomics_TUvsNG[,seq(3, 21, by = 2)]
 metabolomics_TU <- metabolomics_TUvsNG[,seq(2, 21, by = 2)]
 logFC_metabolomics_TUvsNG <- metabolomics_TU - metabolomics_NG
 colnames(logFC_metabolomics_TUvsNG) <- gsub("_TU", "", colnames(logFC_metabolomics_TUvsNG))
+logFC_metabolomics_TUvsNG <- cbind(metabolomics_TUvsNG[,1], logFC_metabolomics_TUvsNG)
+colnames(logFC_metabolomics_TUvsNG)[1] <- "ID"
 
 # prot
 proteomics_NG <- proteomics_TUvsNG[,seq(3, 21, by = 2)]
 proteomics_TU <- proteomics_TUvsNG[,seq(2, 21, by = 2)]
 logFC_proteomics_TUvsNG <- proteomics_TU - proteomics_NG
 colnames(logFC_proteomics_TUvsNG) <- gsub("_TU", "", colnames(logFC_proteomics_TUvsNG))
+logFC_proteomics_TUvsNG <- cbind(proteomics_TUvsNG$ID, logFC_proteomics_TUvsNG)
+colnames(logFC_proteomics_TUvsNG)[1] <- "ID"
+
 
 ## z-transformation
 #metab
 mean_metabolomics_FC <- rowMeans(as.matrix(logFC_metabolomics_TUvsNG), na.rm = T)
 sd_metabolomics_FC <- rowSds(as.matrix(logFC_metabolomics_TUvsNG), na.rm = T)
 logFC_metabolomics_z <- as.data.frame((logFC_metabolomics_TUvsNG - mean_metabolomics_FC)/sd_metabolomics_FC)
+logFC_metabolomics_z <- cbind(metabolomics_TUvsNG$ID, logFC_metabolomics_z)
+colnames(logFC_metabolomics_z)[1] <- "ID"
 
 #prot
 mean_proteomics_FC <- rowMeans(as.matrix(logFC_proteomics_TUvsNG), na.rm = T)
 sd_proteomics_FC <- rowSds(as.matrix(logFC_proteomics_TUvsNG), na.rm = T)
-
 logFC_proteomics_z <- as.data.frame((logFC_proteomics_TUvsNG - mean_proteomics_FC)/sd_proteomics_FC)
+logFC_proteomics_z <- cbind(proteomics_TUvsNG$ID, logFC_proteomics_z)
+colnames(logFC_proteomics_z)[1] <- "ID"
 
 
 
