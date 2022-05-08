@@ -11,7 +11,7 @@ meta_network <- meta_network[which(meta_network$source != meta_network$target),]
 # use single patients of logFC_metabolomics_z and logFC_proteomics_z
 # 3 patients: e.g. "1FF2F9", "36AT2O" and "C5FQXS"
 
-patient <-"1FF2F9"
+patient <-"C5FQXS"
 
 # input is z-score of logFC
 
@@ -100,9 +100,48 @@ SIF <- SIF[which(SIF$Weight != 0),]
 ATT <- merge(ATT, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
 ATT$Nodes <- gsub(",","_",ATT$Nodes)
 
-
-
-
-
 write_csv(SIF, file = paste("results/single_patient/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
 write_csv(ATT, file = paste("results/single_patient/",paste(patient, "_ATT.csv",sep = ""), sep = ""))
+
+# include backwards run
+
+my_options$timelimit <- 1800
+
+test_back <- preprocess_COSMOS_metabolism_to_signaling(meta_network = meta_network,
+                                                       signaling_data = sig_input,
+                                                       metabolic_data = metab_input,
+                                                       maximum_network_depth = 4,
+                                                       CARNIVAL_options = my_options)
+
+my_options$timelimit <- 600
+
+test_result_back <- run_COSMOS_metabolism_to_signaling(data = test_back,
+                                                       CARNIVAL_options = my_options)
+
+formatted_res_back <- format_COSMOS_res(test_result_back)
+
+SIF_back <- formatted_res_back[[1]]
+ATT_back <- formatted_res_back[[2]]
+
+SIF_back <- SIF_back[which(SIF_back$Weight != 0),]
+
+
+ATT_back <- merge(ATT_back, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
+ATT_back$Nodes <- gsub(",","_",ATT_back$Nodes)
+
+
+write_csv(SIF_back, file = paste("results/single_patient/",paste(patient, "_SIF_back.csv",sep = ""), sep = ""))
+write_csv(ATT_back, file = paste("results/single_patient/",paste(patient, "_ATT_back.csv",sep = ""), sep = ""))
+
+SIF_full <- as.data.frame(rbind(SIF,SIF_back))
+SIF_full <- unique(SIF_full)
+
+ATT_full <- as.data.frame(rbind(ATT,ATT_back))
+ATT_full <- unique(ATT_full)
+
+
+ATT_full <- as.data.frame(ATT_full)
+
+write_csv(SIF_full, file = paste("results/single_patient/",paste(patient, "_SIF_full.csv",sep = ""), sep = ""))
+write_csv(ATT_full, file = paste("results/single_patient/",paste(patient, "_ATT_full.csv",sep = ""), sep = ""))
+
