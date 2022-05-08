@@ -9,9 +9,9 @@ data("meta_network")
 meta_network <- meta_network[which(meta_network$source != meta_network$target),]
 
 # use single patients of logFC_metabolomics_z and logFC_proteomics_z
-# 3 patients: e.g. "1FF2F9", "36AT2O" and "C5FQXS"
+# 3 patients: e.g. "1FF2F9", "36AT2O" and "K6R512"
 
-patient <-"C5FQXS"
+patient <-"K6R512"
 
 # input is z-score of logFC
 

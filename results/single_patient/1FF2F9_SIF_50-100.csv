@@ -1,0 +1,211 @@
+Node1,Sign,Node2,Weight
+AR,1,SMS,0.22
+ARG1,1,Enzyme3632__ARG1,0.99
+CAT,-1,JUN,0.01
+CAV1,-1,SLC1A1,0.26
+CEBPB,1,ARG1,0.73
+CEBPB,1,GOT1,0.74
+CPT1A,1,Enzyme213__CPT1A,0.22
+CPT1A,1,Enzyme214__CPT1A_reverse,0.23
+CPT1A,1,Enzyme222__CPT1A,0.09
+CPT1A,1,Enzyme2533__CPT1A,0.41
+CPT1A,1,Enzyme4557__CPT1A,0.32
+CPT1A,1,Enzyme4560__CPT1A,0.23
+CPT1A,1,Enzyme5913__CPT1A,0.18
+CPT1A,1,Enzyme6441__CPT1A,0.05
+CPT1A,1,Enzyme6462__CPT1A,0.41
+CPT1A,1,Enzyme6466__CPT1A,0.41
+CPT1A,1,Enzyme8233__CPT1A_reverse,0.15
+CPT1A,1,Enzyme8235__CPT1A,0.21
+CPT1A,1,Enzyme9733__CPT1A_CPT2,0.41
+CPT1A,1,Enzyme9734__CPT1A_CPT2,0.41
+CPT1B,1,Enzyme213__CPT1B,0.32
+CPT1B,1,Enzyme222__CPT1B,0.13
+CPT1B,1,Enzyme2533__CPT1B,0.5
+CPT1B,1,Enzyme4557__CPT1B,0.06
+CPT1B,1,Enzyme4560__CPT1B,0.16
+CPT1B,1,Enzyme5913__CPT1B,0.14
+CPT1B,1,Enzyme6441__CPT1B,0.08
+CPT1B,1,Enzyme6462__CPT1B,0.5
+CPT1B,1,Enzyme6466__CPT1B,0.5
+CPT1B,1,Enzyme8233__CPT1B_reverse,0.03
+CPT1B,1,Enzyme8235__CPT1B,0.03
+CPT1C,1,Enzyme213__CPT1C,0.05
+CPT1C,1,Enzyme222__CPT1C,0.04
+CPT1C,1,Enzyme2533__CPT1C,0.09
+CPT1C,1,Enzyme4557__CPT1C,0.04
+CPT1C,1,Enzyme4560__CPT1C,0.01
+CPT1C,1,Enzyme5913__CPT1C,0.03
+CPT1C,1,Enzyme6462__CPT1C,0.09
+CPT1C,1,Enzyme6466__CPT1C,0.09
+CPT2,1,Enzyme1453__CPT2_reverse,0.19
+CPT2,1,Enzyme214__CPT2_reverse,0.33
+CPT2,1,Enzyme4562__CPT2,0.22
+CPT2,1,Enzyme5686__CPT2_reverse,0.17
+CPT2,1,Enzyme5914__CPT2_reverse,0.07
+CPT2,1,Enzyme8234__CPT2_reverse,0.06
+CPT2,1,Enzyme8236__CPT2,0.22
+CPT2,1,Enzyme8330__CPT2,0.18
+CPT2,1,Enzyme9733__CPT1A_CPT2,0.59
+CPT2,1,Enzyme9734__CPT1A_CPT2,0.59
+DDX21,1,JUN,0.01
+GAD1,1,Enzyme3634__GAD1,1
+GAD1,1,Enzyme966__GAD1,1
+Enzyme1175__SLC25A20,1,Metab__Levocarnitine propionate_m,1
+Enzyme1453__CPT2_reverse,1,Metab__Tetradecanoylcarnitine_m,0.19
+Enzyme1454__SLC25A20,1,Metab__Tetradecanoylcarnitine_m,0.32
+Enzyme1454__SLC25A20_reverse,1,Metab__Tetradecanoylcarnitine_c,0.05
+Enzyme177__SLC1A1_TRANSPORTER2,1,Metab__L-Aspartic acid_c,0.26
+Enzyme213__CPT1A,1,Metab__L-Palmitoylcarnitine_c,0.22
+Enzyme213__CPT1B,1,Metab__L-Palmitoylcarnitine_c,0.32
+Enzyme213__CPT1C,1,Metab__L-Palmitoylcarnitine_c,0.05
+Enzyme214__CPT1A_reverse,1,Metab__L-Palmitoylcarnitine_m,0.23
+Enzyme214__CPT2_reverse,1,Metab__L-Palmitoylcarnitine_m,0.33
+Enzyme215__SLC25A20,1,Metab__L-Palmitoylcarnitine_m,0.35
+Enzyme215__SLC25A20_reverse,1,Metab__L-Palmitoylcarnitine_c,0.41
+Enzyme220600002__SLC25A1,1,Metab__Butanedioic acid_m,0.74
+Enzyme222__CPT1A,1,Metab__Oleoylcarnitine_c,0.09
+Enzyme222__CPT1B,1,Metab__Oleoylcarnitine_c,0.13
+Enzyme222__CPT1C,1,Metab__Oleoylcarnitine_c,0.04
+Enzyme223__SLC25A20,1,Metab__Oleoylcarnitine_m,0.65
+Enzyme223__SLC25A20_reverse,1,Metab__Oleoylcarnitine_c,0.32
+Enzyme2500__SLC25A20,1,Metab__Acetyl-L-carnitine_c,0.04
+Enzyme2533__CPT1A,1,Metab__L-Octanoylcarnitine_c,0.41
+Enzyme2533__CPT1B,1,Metab__L-Octanoylcarnitine_c,0.5
+Enzyme2533__CPT1C,1,Metab__L-Octanoylcarnitine_c,0.09
+Enzyme362__SULT1E1,1,Metab__Prasterone sulfate_c,1
+Enzyme3632__ARG1,1,Metab__L-Ornithine monohydrochloride_c,1
+Enzyme3634__GAD1,1,Metab__beta-Alanine_c,1
+Enzyme3636__GOT1_reverse,1,Metab__L-Aspartic acid_c,0.74
+Enzyme3636__GOT1_reverse,1,Metab__alpha-Ketoglutaric acid_c,0.74
+Enzyme452400002__SLC22A9,1,Metab__Tetradecanoylcarnitine_c,0.3
+Enzyme452400002__SLC25A20,1,Metab__Tetradecanoylcarnitine_c,0.1
+Enzyme452900002__SLC22A9,1,Metab__Tetradecanoylcarnitine_m,0.06
+Enzyme452900002__SLC25A20,1,Metab__Tetradecanoylcarnitine_m,0.15
+Enzyme4557__CPT1A,1,Metab__Oleoylcarnitine_c,0.32
+Enzyme4557__CPT1B,1,Metab__Oleoylcarnitine_c,0.06
+Enzyme4557__CPT1C,1,Metab__Oleoylcarnitine_c,0.04
+Enzyme4560__CPT1A,1,Metab__Elaidic carnitine_c,0.23
+Enzyme4560__CPT1B,1,Metab__Elaidic carnitine_c,0.16
+Enzyme4560__CPT1C,1,Metab__Elaidic carnitine_c,0.01
+Enzyme4562__CPT2,1,Metab__Elaidic carnitine_m,0.22
+Enzyme5551__SLC25A20,1,Metab__Acetyl-L-carnitine_m,0.96
+Enzyme5686__CPT2_reverse,1,Metab__Oleoylcarnitine_m,0.17
+Enzyme5913__CPT1A,1,Metab__Elaidic carnitine_c,0.18
+Enzyme5913__CPT1B,1,Metab__Elaidic carnitine_c,0.14
+Enzyme5913__CPT1C,1,Metab__Elaidic carnitine_c,0.03
+Enzyme5914__CPT2_reverse,1,Metab__Elaidic carnitine_m,0.07
+Enzyme5915__SLC25A20,1,Metab__Elaidic carnitine_m,0.01
+Enzyme5915__SLC25A20_reverse,1,Metab__Elaidic carnitine_c,0.25
+Enzyme609200002__SLC25A20,1,Metab__L-Octanoylcarnitine_m,1
+Enzyme609300002__SLC25A20,1,Metab__L-Palmitoylcarnitine_m,0.09
+Enzyme618600002__SLC25A1,1,Metab__Butanedioic acid_c,0.26
+Enzyme6441__CPT1A,1,Metab__Tetradecanoylcarnitine_c,0.05
+Enzyme6441__CPT1B,1,Metab__Tetradecanoylcarnitine_c,0.08
+Enzyme6462__CPT1A,1,Metab__Levocarnitine propionate_c,0.41
+Enzyme6462__CPT1B,1,Metab__Levocarnitine propionate_c,0.5
+Enzyme6462__CPT1C,1,Metab__Levocarnitine propionate_c,0.09
+Enzyme6466__CPT1A,1,Metab__Isovalerylcarnitine_c,0.41
+Enzyme6466__CPT1B,1,Metab__Isovalerylcarnitine_c,0.5
+Enzyme6466__CPT1C,1,Metab__Isovalerylcarnitine_c,0.09
+Enzyme7326__SRM,1,Metab__Spermidine_c,1
+Enzyme7346__ODC1,1,Metab__Putrescine_c,1
+Enzyme8233__CPT1A_reverse,1,Metab__Tetradecanoylcarnitine_c,0.15
+Enzyme8233__CPT1B_reverse,1,Metab__Tetradecanoylcarnitine_c,0.03
+Enzyme8234__CPT2_reverse,1,Metab__Tetradecanoylcarnitine_m,0.06
+Enzyme8235__CPT1A,1,Metab__Tetradecanoylcarnitine_c,0.21
+Enzyme8235__CPT1B,1,Metab__Tetradecanoylcarnitine_c,0.03
+Enzyme8236__CPT2,1,Metab__Tetradecanoylcarnitine_m,0.22
+Enzyme8330__CPT2,1,Metab__Oleoylcarnitine_m,0.18
+Enzyme833300002__SLC22A9,1,Metab__Elaidic carnitine_m,0.08
+Enzyme833300002__SLC25A20,1,Metab__Elaidic carnitine_m,0.62
+Enzyme8423__P4HA2,1,Metab__Butanedioic acid_c,0.74
+Enzyme8424__P4HA2,1,Metab__Butanedioic acid_m,0.26
+Enzyme9549__SMS,1,"Metab__1,4-Butanediamine, N,N'-bis(3-aminopropyl)-_c",0.22
+Enzyme9549__SRM,1,"Metab__1,4-Butanediamine, N,N'-bis(3-aminopropyl)-_c",0.78
+Enzyme966__GAD1,1,Metab__l-Taurine_c,1
+Enzyme9733__CPT1A_CPT2,1,Metab__Malonylcarnitine_c,1
+Enzyme9734__CPT1A_CPT2,1,Metab__Malonylcarnitine_m,1
+Enzyme9838__SLC25A20,1,Metab__Acetyl-L-carnitine_c,0.96
+GOT1,1,Enzyme3636__GOT1_reverse,0.74
+JUN,-1,MYC,0.01
+JUN,1,ARG1,0.01
+LRPPRC,1,STAT3,0.25
+LTF,1,MAPK1,1
+MAPK1,-1,NR3C1,0.74
+MAPK1,1,AR,0.22
+MAPK1,1,MYC,0.78
+MAPK1,1,STAT5A,0.12
+MAPK1,1,SULT1E1,1
+Metab__L-Aspartic acid_c,1,Enzyme3634__GAD1,1
+Metab__Acetyl-L-carnitine_c,1,Enzyme5551__SLC25A20,1
+Metab__alpha-Ketoglutaric acid_c,1,Enzyme8423__P4HA2,0.74
+Metab__L-Ornithine monohydrochloride_c,1,Enzyme7346__ODC1,1
+Metab__L-Palmitoylcarnitine_c,1,Enzyme215__SLC25A20,0.35
+Metab__L-Palmitoylcarnitine_c,1,Enzyme609300002__SLC25A20,0.09
+Metab__L-Palmitoylcarnitine_m,1,Enzyme215__SLC25A20_reverse,0.41
+Metab__Butanedioic acid_c,1,Enzyme220600002__SLC25A1,0.74
+Metab__Butanedioic acid_m,1,Enzyme618600002__SLC25A1,0.26
+Metab__L-Octanoylcarnitine_c,1,Enzyme609200002__SLC25A20,1
+Metab__Levocarnitine propionate_c,1,Enzyme1175__SLC25A20,1
+Metab__Putrescine_c,1,Enzyme7326__SRM,1
+Metab__Oleoylcarnitine_c,1,Enzyme223__SLC25A20,0.65
+Metab__Oleoylcarnitine_m,1,Enzyme223__SLC25A20_reverse,0.32
+Metab__Tetradecanoylcarnitine_c,1,Enzyme1454__SLC25A20,0.32
+Metab__Tetradecanoylcarnitine_c,1,Enzyme452900002__SLC22A9,0.06
+Metab__Tetradecanoylcarnitine_c,1,Enzyme452900002__SLC25A20,0.15
+Metab__Tetradecanoylcarnitine_m,1,Enzyme1454__SLC25A20_reverse,0.05
+Metab__Tetradecanoylcarnitine_m,1,Enzyme452400002__SLC22A9,0.3
+Metab__Tetradecanoylcarnitine_m,1,Enzyme452400002__SLC25A20,0.1
+Metab__Elaidic carnitine_c,1,Enzyme5915__SLC25A20,0.01
+Metab__Elaidic carnitine_c,1,Enzyme833300002__SLC22A9,0.08
+Metab__Elaidic carnitine_c,1,Enzyme833300002__SLC25A20,0.62
+Metab__Elaidic carnitine_m,1,Enzyme5915__SLC25A20_reverse,0.25
+MYC,1,SRM,0.78
+NCOA1,1,CPT1A,0.01
+NCOA1,1,PPARA,0.01
+NR3C1,1,CEBPB,0.74
+NR3C1,1,NCOA1,0.01
+P4HA2,1,Enzyme8424__P4HA2,0.26
+PPARA,-1,MYC,0.78
+PPARA,1,CPT1B,0.5
+PPARA,1,CPT1C,0.09
+PPARA,1,CPT2,0.59
+PPARA,1,RXRG,0.03
+PPARA,1,SLC25A20,1
+PRKCE,-1,GAD1,1
+PUF60,-1,MYC,0.78
+RXRG,1,CPT1A,0.03
+SLC1A1,1,Enzyme177__SLC1A1_TRANSPORTER2,0.26
+SLC25A20,1,Enzyme1175__SLC25A20,1
+SLC25A20,1,Enzyme1454__SLC25A20,0.32
+SLC25A20,1,Enzyme1454__SLC25A20_reverse,0.05
+SLC25A20,1,Enzyme215__SLC25A20,0.35
+SLC25A20,1,Enzyme215__SLC25A20_reverse,0.41
+SLC25A20,1,Enzyme223__SLC25A20,0.65
+SLC25A20,1,Enzyme223__SLC25A20_reverse,0.32
+SLC25A20,1,Enzyme2500__SLC25A20,0.04
+SLC25A20,1,Enzyme452400002__SLC25A20,0.1
+SLC25A20,1,Enzyme452900002__SLC25A20,0.15
+SLC25A20,1,Enzyme5551__SLC25A20,1
+SLC25A20,1,Enzyme5915__SLC25A20,0.01
+SLC25A20,1,Enzyme5915__SLC25A20_reverse,0.25
+SLC25A20,1,Enzyme609200002__SLC25A20,1
+SLC25A20,1,Enzyme609300002__SLC25A20,0.09
+SLC25A20,1,Enzyme833300002__SLC25A20,0.62
+SLC25A20,1,Enzyme9838__SLC25A20,0.96
+SMS,1,Enzyme9549__SMS,0.22
+SPI1,1,ARG1,0.24
+SRM,1,Enzyme9549__SRM,0.78
+STAT1,-1,MYC,0.78
+STAT1,-1,PRKCE,1
+STAT1,1,PPARA,1
+STAT1,1,TP53,0.26
+STAT3,1,CPT1A,0.25
+STAT3,1,SPI1,0.24
+STAT3,1,STAT1,0.25
+STAT5A,-1,CPT1A,0.12
+SULT1E1,1,Enzyme362__SULT1E1,1
+TP53,-1,AR,0.22
+TP53,-1,MYC,0.04
+TP53,1,P4HA2,0.26
