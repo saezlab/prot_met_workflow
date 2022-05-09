@@ -19,7 +19,7 @@ patient <-"K6R512"
 # metab
 met_cosmos <- as.data.frame(matrix(NA, ncol = 2, nrow = dim(logFC_metabolomics_z)[1]))
 colnames(met_cosmos) <- c("ID", "logFC_z")
-met_cosmos$ID <- logFC_metabolomics_z[,1]
+met_cosmos$ID <- rownames(logFC_metabolomics_z)
 met_cosmos$logFC_z<- logFC_metabolomics_z[,which(colnames(logFC_metabolomics_z) == patient)]
 
 # filter top 50 metab
@@ -29,10 +29,10 @@ met_cosmos <- met_cosmos %>%
 
 
 # prot
-prot_cosmos <- as.data.frame(matrix(NA, ncol = 2, nrow = dim(logFC_proteomics_TUvsNG)[1]))
+prot_cosmos <- as.data.frame(matrix(NA, ncol = 2, nrow = dim(logFC_proteomics_z)[1]))
 colnames(prot_cosmos) <- c("ID", "logFC_z")
-prot_cosmos$ID <- logFC_proteomics_TUvsNG[,1]
-prot_cosmos$logFC_z<- logFC_proteomics_TUvsNG[,which(colnames(logFC_proteomics_TUvsNG) == patient)]
+prot_cosmos$ID <- rownames(logFC_proteomics_z)
+prot_cosmos$logFC_z<- logFC_proteomics_z[,which(colnames(logFC_proteomics_z) == patient)]
 
 # filter top 100 prot
 prot_cosmos <- prot_cosmos %>%
