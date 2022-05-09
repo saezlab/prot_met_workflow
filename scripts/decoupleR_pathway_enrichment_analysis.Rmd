@@ -1,0 +1,31 @@
+---
+title: "decoupleR"
+author: "Dustin Schilling"
+date: "9 5 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+```{r}
+library(decoupleR)
+```
+
+## Input Data
+
+```{r}
+# network
+combined_metab_gene_hallmarks <- read_csv("../support/combined_metab_gene_hallmarks.csv")
+network_lung <- combined_metab_gene_hallmarks
+network_lung$mor <- 1
+network_lung$term <- gsub("HALLMARK_","", network_lung$term)
+network_lung$term <- gsub("_", " ", network_lung$term)
+
+
+
+```
+
