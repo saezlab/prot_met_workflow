@@ -39,6 +39,11 @@ proteomics_DE_t <- proteomics_DE_t %>%
 cosmos_prot_input <- proteomics_DE_t$t
 names(cosmos_prot_input) <- proteomics_DE_t$ID
 
+# save proteomics_DE_t and metabolomics_DE_t
+saveRDS(metabolomics_DE_t, file = paste("results/", "metabolomics_DE_t.Rda", sep = ""))
+saveRDS(proteomics_DE_t, file = paste("results/", "proteomics_DE_t.Rda", sep = ""))
+#
+
 cosmos_met_input <- cosmos_met_input[which(abs(cosmos_met_input) > 3)]
 cosmos_prot_input <- cosmos_prot_input[which(abs(cosmos_prot_input) > 6)]
 
