@@ -8,6 +8,9 @@ library(tidyr)
 data("meta_network")
 meta_network <- meta_network[which(meta_network$source != meta_network$target),]
 
+logFC_metabolomics_z <- readRDS("./results/logFC_metabolomics_z.Rda")
+logFC_proteomics_z <- readRDS("./results/logFC_proteomics_z.Rda")
+
 # use single patients of logFC_metabolomics_z and logFC_proteomics_z
 # 3 patients: e.g. "1FF2F9", "36AT2O" and "K6R512"
 
@@ -33,6 +36,8 @@ prot_cosmos <- as.data.frame(matrix(NA, ncol = 2, nrow = dim(logFC_proteomics_z)
 colnames(prot_cosmos) <- c("ID", "logFC_z")
 prot_cosmos$ID <- rownames(logFC_proteomics_z)
 prot_cosmos$logFC_z<- logFC_proteomics_z[,which(colnames(logFC_proteomics_z) == patient)]
+z_score_prot <- prot_cosmos
+
 
 # filter top 100 prot
 prot_cosmos <- prot_cosmos %>%
@@ -97,7 +102,7 @@ ATT <- formatted_res[[2]]
 
 SIF <- SIF[which(SIF$Weight != 0),]
 
-ATT <- merge(ATT, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
+ATT <- merge(ATT, z_score_prot, all.x = T, by.x = "Nodes", by.y = "ID")
 ATT$Nodes <- gsub(",","_",ATT$Nodes)
 
 write_csv(SIF, file = paste("results/single_patient/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
@@ -126,7 +131,7 @@ ATT_back <- formatted_res_back[[2]]
 SIF_back <- SIF_back[which(SIF_back$Weight != 0),]
 
 
-ATT_back <- merge(ATT_back, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
+ATT_back <- merge(ATT_back, z_score_prot, all.x = T, by.x = "Nodes", by.y = "ID")
 ATT_back$Nodes <- gsub(",","_",ATT_back$Nodes)
 
 
