@@ -30,17 +30,23 @@ network_combined$mor <- 1
 network_combined$term <- gsub("HALLMARK_","", network_combined$term)
 network_combined$term <- gsub("_", " ", network_combined$term)
 
-# network seperated
+# network separated
 network_met <- network_combined[which(grepl("HMDB", network_combined$feature) == T),]
 network_prot <- network_combined[which(grepl("HMDB", network_combined$feature) == F),]
 
-# combine and seperated matrix as input
+
+# combine and separated matrix as input for pathway
 metabolomics_DE_t <- readRDS("../results/metabolomics_DE_t.Rda")
 proteomics_DE_t <- readRDS("../results/proteomics_DE_t.Rda")
 
+
+
+# combine
 ```
 
+# Pathway enrichment analysis
 ```{r}
 
 ```
 
+# Single patient pathway enrichment analysis
