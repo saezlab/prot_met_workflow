@@ -21,14 +21,17 @@ library(dplyr)
 library(tibble)
 library(tidyr)
 library(pheatmap)
+library(ggplot2)
 library(ComplexHeatmap)
+
 ```
 
 ## Input Data
 
 ```{r}
 # network combined
-combined_metab_gene_hallmarks <- read_csv("../support/combined_metab_gene_hallmarks.csv")
+
+combined_metab_gene_hallmarks <- read_csv("support/combined_metab_gene_hallmarks.csv")
 network_combined <- combined_metab_gene_hallmarks
 network_combined$mor <- 1
 network_combined$term <- gsub("HALLMARK_","", network_combined$term)
@@ -40,12 +43,12 @@ network_prot <- network_combined[which(grepl("HMDB", network_combined$feature) =
 
 
 # input for pathway enrichment analysis
-logFC_PEA_prot_MTBE_z <- readRDS("../results/single_patient/logFC_PEA_prot_MTBE_z.Rda")
-logFC_PEA_prot_autoSP3_z <- readRDS("../results/single_patient/logFC_PEA_prot_autoSP3_z.Rda")
-logFC_PEA_metab_z <- readRDS("../results/single_patient/logFC_PEA_metab_z.Rda")
+logFC_PEA_prot_MTBE_z <- readRDS("results/single_patient/logFC_PEA_prot_MTBE_z.Rda")
+logFC_PEA_prot_autoSP3_z <- readRDS("results/single_patient/logFC_PEA_prot_autoSP3_z.Rda")
+logFC_PEA_metab_z <- readRDS("results/single_patient/logFC_PEA_metab_z.Rda")
 
 
-Biocrates_metabolite_identifier <- read_excel("../support/Biocrates_metabolite_identifier.xlsx")
+Biocrates_metabolite_identifier <- read_excel("support/Biocrates_metabolite_identifier.xlsx")
 Biocrates_metabolite_identifier$feature <- gsub("[()/: -]",".",Biocrates_metabolite_identifier$feature)
 ```
 
@@ -178,7 +181,7 @@ corr_matrix_autoSP3_sep <- corr_matrix_autoSP3_sep %>%
 corr_proteomics <- diag(cor(corr_matrix_MTBE_sep, corr_matrix_autoSP3_sep, method= "pearson"))
 ## correlation sample wise
 corr_proteomics 
-
+ 
 mean_corr_proteomics <- mean(corr_proteomics)
 mean_corr_proteomics
 ```
@@ -253,13 +256,62 @@ ph_corr[5,2] <- mean_corr_integrated
 ph_corr[c(1:4),3] <- corr_integrated_average
 ph_corr[5,3] <- mean_corr_integrated_average
 
+#breaks <- c(seq(0,0.99, by=.1))
 cols <- colorRampPalette(c("white","#7285A5"))(100)
 
 
-ComplexHeatmap::pheatmap(ph_corr, display_numbers = T, cluster_cols = F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"))
-L
+heatmap_plot <- ComplexHeatmap::pheatmap(ph_corr, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot
 
 
+pdf("pHeatmap_pathway_enrichment_scores_corr_proteomics.pdf")
+heatmap_plot
+dev.off()
+
+```
+
+# corr between metab and prot1/2
+```{r}
+# metab and MTBE
+corr_metab_MTBE <- diag(cor(matrix_metab, matrix_MTBE, method= "pearson"))
+## correlation sample wise
+corr_metab_MTBE 
+
+mean_corr_metab_MTBE <- mean(corr_metab_MTBE)
+mean_corr_metab_MTBE
+
+# metab and autoSP3
+corr_metab_autoSP3 <- diag(cor(matrix_metab, matrix_autoSP3, method= "pearson"))
+## correlation sample wise
+corr_metab_autoSP3 
+
+mean_corr_metab_autoSP3 <- mean(corr_metab_autoSP3)
+mean_corr_metab_autoSP3
+```
+
+# Visualize coor metab and prot1/2
+```{r}
+ph_corr_m <- matrix(NA, ncol = 2, nrow=5)
+
+colnames(ph_corr_m) <- c("Metab and MTBE", "Metab and autoSP3")
+rownames(ph_corr_m) <- c("Patient_K6R512", "Patient_KWF2HW", "Patient_ZQ021J", "Patient_ZT9UTK", "Average")
+
+
+ph_corr_m[c(1:4),1] <- corr_metab_MTBE
+ph_corr_m[5,1] <- mean_corr_metab_MTBE
+
+ph_corr_m[c(1:4),2] <- corr_metab_autoSP3
+ph_corr_m[5,2] <- mean_corr_metab_autoSP3
+
+#breaks <- c(seq(0,0.99, by=.1))
+cols <- colorRampPalette(c("white","#7285A5"))(100) # or use length(breaks)
+
+heatmap_plot_m <- ComplexHeatmap::pheatmap(ph_corr_m, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot_m
+
+pdf("pHeatmap_pathway_enrichment_scores_corr_metab_and_proteomics.pdf")
+heatmap_plot_m
+dev.off()
 
 ```
 
