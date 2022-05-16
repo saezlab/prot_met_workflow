@@ -264,7 +264,7 @@ heatmap_plot <- ComplexHeatmap::pheatmap(ph_corr, display_numbers = T, cluster_c
 heatmap_plot
 
 
-pdf("pHeatmap_pathway_enrichment_scores_corr_proteomics.pdf")
+pdf("pHeatmap_pathway_enrichment_scores_corr_proteomics.pdf", height = 3.5)
 heatmap_plot
 dev.off()
 
@@ -309,7 +309,7 @@ cols <- colorRampPalette(c("white","#7285A5"))(100) # or use length(breaks)
 heatmap_plot_m <- ComplexHeatmap::pheatmap(ph_corr_m, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
 heatmap_plot_m
 
-pdf("pHeatmap_pathway_enrichment_scores_corr_metab_and_proteomics.pdf")
+pdf("pHeatmap_pathway_enrichment_scores_corr_metab_and_proteomics.pdf", height = 3.5)
 heatmap_plot_m
 dev.off()
 
