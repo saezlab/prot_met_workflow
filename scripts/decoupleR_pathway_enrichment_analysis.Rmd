@@ -256,15 +256,15 @@ ph_corr[5,2] <- mean_corr_integrated
 ph_corr[c(1:4),3] <- corr_integrated_average
 ph_corr[5,3] <- mean_corr_integrated_average
 
-#breaks <- c(seq(0,0.99, by=.1))
-cols <- colorRampPalette(c("white","#7285A5"))(100)
+breaks <- c(seq(0,0.99, by=.01))
+cols <- c(colorRampPalette(c("white","#7285A5"))(length(breaks))) # or use length(breaks)
 
 
-heatmap_plot <- ComplexHeatmap::pheatmap(ph_corr, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot <- ComplexHeatmap::pheatmap(ph_corr, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, breaks = breaks, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
 heatmap_plot
 
 
-pdf("pHeatmap_pathway_enrichment_scores_corr_proteomics.pdf", height = 3.5)
+pdf("pHeatmap_pathway_enrichment_scores_corr_proteomics_color.pdf", height = 3.5)
 heatmap_plot
 dev.off()
 
@@ -303,13 +303,13 @@ ph_corr_m[5,1] <- mean_corr_metab_MTBE
 ph_corr_m[c(1:4),2] <- corr_metab_autoSP3
 ph_corr_m[5,2] <- mean_corr_metab_autoSP3
 
-#breaks <- c(seq(0,0.99, by=.1))
-cols <- colorRampPalette(c("white","#7285A5"))(100) # or use length(breaks)
+breaks <- c(seq(0,0.99, by=.01))
+cols <- c(colorRampPalette(c("white","#7285A5"))(length(breaks))) # or use length(breaks)
 
-heatmap_plot_m <- ComplexHeatmap::pheatmap(ph_corr_m, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot_m <- ComplexHeatmap::pheatmap(ph_corr_m, display_numbers = T, cluster_cols = F,  cluster_rows=F, fontsize_number = 14, treeheight_row = 0, color = cols, breaks = breaks, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
 heatmap_plot_m
 
-pdf("pHeatmap_pathway_enrichment_scores_corr_metab_and_proteomics.pdf", height = 3.5)
+pdf("pHeatmap_pathway_enrichment_scores_corr_metab_and_proteomics_color.pdf", height = 3.5)
 heatmap_plot_m
 dev.off()
 
