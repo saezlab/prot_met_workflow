@@ -1,0 +1,29 @@
+---
+title: "Differential_expression_analysis"
+author: "Dustin Schilling"
+date: "17 5 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Library
+
+```{r}
+library(cosmosR)
+library(decoupleR)
+library(dplyr)
+library(tidyr)
+library(pheatmap)
+library(dendextend)
+library(tidyverse)
+library(ggrepel)
+```
+
+# Load decoupleR PEA
+
+```{r}
+
+```
+
