@@ -289,6 +289,9 @@ mean_corr_metab_autoSP3 <- mean(corr_metab_autoSP3)
 mean_corr_metab_autoSP3
 ```
 
+```{r}
+t.test(corr_metab_autoSP3,corr_metab_MTBE)
+```
 # Visualize coor metab and prot1/2
 ```{r}
 ph_corr_m <- matrix(NA, ncol = 2, nrow=5)

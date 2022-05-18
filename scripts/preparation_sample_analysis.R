@@ -44,6 +44,16 @@ autoSP3orMTBE <- raw_prot@colData@listData[["Processing"]]
 sum(autoSP3orMTBE == "MTBE_SP3")
 # first 18 are MTBE_SP3, autoSP3 are only 17
 # some samples do not have healthy or cancerous partner with sample preparation
+metab_samples <- as.data.frame(cbind("Metab",names(metab_count)))
+prot_samples <- as.data.frame(cbind("Prot",names(prot_count)[-1],autoSP3orMTBE))
+prot_samples$V2 <- gsub("[.].*","",prot_samples$V2)
+prot_samples <- unique(prot_samples)
+
+comb <- merge(metab_samples, prot_samples, by = "V2", all =T)
+
+comb$patient <- gsub("_.*","",comb$V2)
+
+table(comb$patient)
 # Thereby, these will be combined so it ends up with 20 samples that are pair-wise combined just like in metabolomics 
 # We will do these manually so it is exactly the same as metabolomics
 proteomics_TUvsNG <- proteomics_TUvsNG[,c(6, 5, 12, 11, 16, 15, 14, 13, 2, 1, 27, 26, 24, 23, 18, 17, 9, 8, 4, 3)]
