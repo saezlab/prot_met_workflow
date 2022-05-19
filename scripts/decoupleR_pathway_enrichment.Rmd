@@ -3,6 +3,8 @@ title: "decoupleR_pathway_enrichment_analysis"
 author: "Dustin Schilling"
 date: "17 5 2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +19,8 @@ library(decoupleR)
 library(dplyr)
 library(tidyr)
 library(tibble)
+library(ggplot2)
+library(pheatmap)
 ```
 
 
@@ -129,14 +133,6 @@ combined_mat_z <- rbind(prot_decoupler_z, metab_decoupler_z)
 ```
 
 
-# norm_wmean on single patient level
-```{r}
-res_wmean_PEA_sp <-  run_wmean(mat = combined_mat_z, net = network_combined, .source = "term", .target = "feature", .mor="mor")
-res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
-  filter(statistic == 'norm_wmean')
-```
-
-
 # norm_wmean on DE genes
 ```{r}
 res_wmean_PEA <-  run_wmean(mat = combined_t, net = network_combined, .source = "term", .target = "feature", .mor="mor")
@@ -144,5 +140,91 @@ res_wmean_PEA <- res_wmean_PEA %>%
   filter(statistic == 'norm_wmean')
 ```
 
+# Visualization of all DE genes in pathways
 
+```{r}
+pathway_select <- res_wmean_PEA %>%
+  dplyr::filter(p_value < 0.05) %>%  # filter for significance
+  dplyr::select("source", "score", "p_value") %>%
+  dplyr::rename(pathway = "source", pvalue = "p_value") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  dplyr::arrange(pvalue) %>%
+  slice(1:10)
+
+dereg_pathway <- pathway_select$pathway
+dereg_pathway <- unlist(dereg_pathway)
+
+ggplot_normwmean <- ggplot(pathway_select, aes(y = reorder(pathway, score), x = score)) +  
+    geom_bar(aes(fill = score), stat = "identity") +
+    scale_fill_gradient2(low = "darkblue", high = "indianred", 
+        mid = "whitesmoke", midpoint = 0) + 
+    scale_x_continuous(breaks = seq(-8, 12, by= 2)) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold", size = 10),
+          axis.text.y = element_text(size = 7),
+          axis.text.x = element_text(size = 6)) +
+    ylab("") +
+    labs(title = "Normalized weighted mean scores in lung cancer \n for pathways in the Hallmarks gene set") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+pdf("results/plots/norm_wmean_pathway_scores_HALLMARK.pdf")
+ggplot_normwmean
+dev.off()
+```
+
+# filter genes out of successful nodes
+```{r}
+# filter manually
+head(dereg_pathway)
+deregulated_genes_and_metabs <- data.frame(matrix(ncol = 2))
+colnames(deregulated_genes_and_metabs) <- c("feature", "term")
+
+for (i in 1:length(dereg_pathway)) {
+   x <- network_combined[which(network_combined$term %in% dereg_pathway[i]), c(1,2) ]
+   deregulated_genes_and_metabs <- rbind(Deregulated_genes, x)
+}
+
+deregulated_genes_and_metabs <- deregulated_genes_and_metabs[-1,]
+
+saveRDS(deregulated_genes_and_metabs, "results/deregulated_genes_and_metabs.RDS")
+```
+
+
+
+
+# norm_wmean on single patient level
+```{r}
+# take pathways from before
+
+res_wmean_PEA_sp <-  run_wmean(mat = combined_mat_z, net = network_combined, .source = "term", .target = "feature", .mor="mor")
+res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
+  filter(statistic == 'norm_wmean')
+
+res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
+  select(condition, source, score) %>%
+  dplyr::rename(pathway = "source") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  pivot_wider(names_from = condition, values_from = score)
+
+subset.p <- which(res_wmean_PEA_sp$pathway %in% dereg_pathway)
+  
+res_wmean_PEA_sp <- res_wmean_PEA_sp[subset.p,]
+res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
+  column_to_rownames("pathway")
+```
+
+# pheatmap for single patients
+```{r}
+p_res_PEA_sp <- pheatmap(res_wmean_PEA_sp)
+
+pdf("results/plots/pheatmap_single_patients_decoupler_scores_norm_wmean.pdf")
+p_res_PEA_sp
+dev.off()
+```
+
+```{r}
+sessionInfo()
+```
 

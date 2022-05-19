@@ -19,11 +19,94 @@ library(pheatmap)
 library(dendextend)
 library(tidyverse)
 library(ggrepel)
+library(ggplot2)
+library(metaboliteIDmapping)
 ```
 
-# Load decoupleR PEA
+# Load decoupleR PEA and nodes of network
+use prots and metabs of PEA and generated network and visualize them in volcano plot, PCA, pheatmap (logFC).
 
 ```{r}
+deregulated_genes_and_metabs <- readRDS("../results/deregulated_genes_and_metabs.RDS")
+# Load succesfull nodes
+nodes_lung_full<- readRDS("../results/nodes_ORA_lung_full.RData")
+nodes_lung<- readRDS("../results/nodes_ORA_lung.RData")
+
+f_deregulated_genes_and_metabs <- deregulated_genes_and_metabs[grepl("MYOGENESIS|EPITHELIAL MESENCHYMAL TRANSITION|MYC TARGETS V1", deregulated_genes_and_metabs$term),]
+dereg_PEA_network <- f_deregulated_genes_and_metabs[f_deregulated_genes_and_metabs$feature %in% nodes_lung_full$sucesses, ] 
+
+
+# metab and prot
+logFC_proteomics_z <- readRDS("../results/logFC_proteomics_z.Rda")
+logFC_metabolomics_z <- readRDS("../results/logFC_metabolomics_z.Rda")
+
+combined_metab_gene_hallmarks <- read_csv("../support/combined_metab_gene_hallmarks.csv")
+
+Biocrates_metabolite_identifier <- read_excel("../support/Biocrates_metabolite_identifier.xlsx")
+Biocrates_metabolite_identifier$feature <- gsub("[()/: -]",".",Biocrates_metabolite_identifier$feature)
+
+##################################
+# limma ttest
+##################################
+proteomics_t <- readRDS("../results/proteomics_DE_t.Rda")
+metabolomics_t <- readRDS("../results/metabolomics_DE_t.Rda")
+
+proteomics_t <- proteomics_t[,c(3,4, 6, 8 )]
+proteomics_t <- proteomics_t[-which(proteomics_t$ID == "NA"),]
+proteomics_t<- unique(proteomics_t)
+proteomics_t <- proteomics_t %>%
+  group_by(ID) %>%
+  summarise_each(funs(mean))
+proteomics_t <- proteomics_t %>%
+  drop_na() %>%
+  column_to_rownames("ID")
+
+
+metabolomics_t <- metabolomics_t[,c(12, 3, 5, 7)] 
+metabolomics_t<- unique(metabolomics_t)
+metabolomics_t <- metabolomics_t %>%
+  group_by(HMDB) %>%
+  summarise_each(funs(mean))
+metabolomics_t <- metabolomics_t %>%
+  drop_na() %>%
+  column_to_rownames("HMDB")
+
+######################################################################
+combined_t <- rbind(metabolomics_t, proteomics_t)
+######################################################################
+
+metabolomics_t <- metabolomics_t %>%
+  rownames_to_column("HMDB")
+metabolomics_t_map <- left_join(metabolomics_t, metabolitesMapping, by = "HMDB" )
+metabolomics_t_map <-metabolomics_t_map %>%
+  select(HMDB, logFC, t, adj.P.Val, Name) %>%
+  unique()
+metabolomics_t_map <- metabolomics_t_map[-which(is.na(metabolomics_t_map$Name) == T), ]
+
+# only 4 HMDBs not annotated, these are:
+metabolomics_t$HMDB[which(metabolomics_t$HMDB %in% metabolomics_t_map$HMDB == F)]
+
+```
+# mutate p-values to -log10()
+```{r}
+proteomics_t$adj.P.Val <- -log10(proteomics_t$adj.P.Val)
+proteomics_t <- proteomics_t %>%
+  rename(p.val = "adj.P.Val")
+
+metabolomics_t_map$adj.P.Val <- -log10(metabolomics_t_map$adj.P.Val)
+metabolomics_t_map <- metabolomics_t_map %>%
+  rename(p.val = "adj.P.Val")
+```
+
+
+
+# Volcano Plot prot
+```{r}
+proteomics_t
+
+prot.volc <-  ggplot(proteomics_t, aes(x = logFC, y = p.val)) +
+  geom_point()
+prot.volc
 
 ```
 
