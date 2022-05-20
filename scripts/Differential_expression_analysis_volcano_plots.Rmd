@@ -283,6 +283,11 @@ volc.met.MYC$MYC_targets[which(volc.met.MYC$HMDB %in% MYC_deregulated_genes_and_
 ###
 volc.met.MYC.filter <- volc.met.MYC[which(volc.met.MYC$HMDB %in% MYC_deregulated_genes_and_metabs$feature), ]
 #filter for labeling significant metabolites in MYC pathway
+
+
+#1,4−Butanediamine, N,N'−bis(3−aminopropyl)− is spermine
+volc.met.MYC.filter[8, "Name"] <- "Spermine"
+
 ##
 
 
@@ -311,6 +316,8 @@ combined.volc.MYC
 pdf("results/plots/MYC_targets_volcano_plot.pdf", width = 10)
 combined.volc.MYC
 dev.off()
+
+
 ```
 
 
