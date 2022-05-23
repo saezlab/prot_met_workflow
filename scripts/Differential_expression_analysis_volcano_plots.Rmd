@@ -181,7 +181,10 @@ combined.volc <- combined + plot_layout(guides = "collect")
 combined.volc
 
 pdf("results/plots/volcano_combined.pdf", width = 12)
-combined.volc
+combined.volc +  plot_annotation(
+  tag_levels = "A",
+  tag_suffix = ')'
+)
 dev.off()
 ```
 
@@ -252,7 +255,7 @@ prot.volc.MYC <-  ggplot(volc.prot.MYC, aes(x = logFC, y = -log10(p.val), col = 
   geom_hline(yintercept=-log10(p_cutoff), lty=4,col="black",lwd=0.8) +
   geom_vline(xintercept=c(-1,1),lty=4,col="black",lwd=0.8) +
   geom_text_repel(data=volc.prot.MYC.filter, aes(label=ID), show.legend = F) +
-  ggtitle("MYC targets in Lung Cancer") +
+  ggtitle("MYC Targets in Proteomics of Lung Cancer") +
   xlab("log2(fold change)") + 
   ylab("-log10 (adj. p-value)") +
   theme_bw() + 
@@ -295,7 +298,7 @@ met.volc.MYC <-  ggplot(volc.met.MYC, aes(x = logFC, y = -log10(p.val), col = MY
   geom_point(alpha=0.4, size=2) +
   scale_color_manual(values=c("red","grey")) +
   geom_text_repel(data=volc.met.MYC.filter, aes(label=Name), show.legend = F) +
-  ggtitle("MYC targets in Lung Cancer") +
+  ggtitle("MYC targets in Metabolomics of Lung Cancer") +
   xlab("log2(fold change)") + 
   ylab("-log10 (adj. p-value)") +
   theme_bw() + 
@@ -313,8 +316,11 @@ combined.volc.MYC <- combined_MYC + plot_layout(guides = "collect")
 combined.volc.MYC
 
 
-pdf("results/plots/MYC_targets_volcano_plot.pdf", width = 10)
-combined.volc.MYC
+pdf("results/plots/MYC_targets_volcano_plot.pdf", width = 12)
+combined.volc.MYC +  plot_annotation(
+  tag_levels = "A",
+   tag_suffix = ')'
+)
 dev.off()
 
 

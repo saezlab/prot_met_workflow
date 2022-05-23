@@ -1,0 +1,131 @@
+---
+title: "data_distribution_and_visualization"
+author: "Dustin Schilling"
+date: "23 5 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Library
+```{r}
+#Main libraries
+library(readr)
+library(vsn)
+
+#Support functions also requires
+library(ggplot2)
+library(reshape)
+library(pheatmap)
+library(gridExtra)
+library(grid)
+library(cowplot)
+library(ggrepel)
+library(hexbin)
+library(patchwork)
+options(ggrepel.max.overlaps = Inf) 
+
+source("support_functions.R")
+
+metabolomics_TUvsNG <- readRDS("../results/metabolomics_TUvsNG.Rda")
+proteomics_TUvsNG <- readRDS("../results/proteomics_TUvsNG.Rda")
+
+metabolomics_DE_t <- readRDS("../results/metabolomics_DE_t.Rda")
+proteomics_DE_t <- readRDS("../results/proteomics_DE_t.Rda")
+
+```
+
+# Design
+```{r}
+targets <- as.data.frame(matrix(NA,length(names(proteomics_TUvsNG)),2))
+names(targets) <- c("sample","condition")
+targets$sample <- names(proteomics_TUvsNG)
+targets$condition[seq(0,20,2)] <- "NG"
+targets$condition[seq(1,20,2)] <- "TU"
+```
+
+
+# Distribution
+```{r}
+#make the plots
+plots_prot <- magicPlotMakerLight(df = proteomics_TUvsNG, targets = targets)
+plots_met <- magicPlotMakerLight(df = metabolomics_TUvsNG, targets = targets)
+
+
+```
+
+# Plots
+```{r}
+p1 <- plots_prot[[1]] + ggtitle("Distribution of Proteomic Data in Lung Cancer") +theme(plot.title = element_text(hjust = 0.5))
+p2 <- plots_met[[1]] + ggtitle("Distribution of Metabolomic Data in Lung Cancer") +theme(plot.title = element_text(hjust = 0.5))
+comb_p <- p1 + p2 & theme(legend.position = "right")
+combined.violin <- comb_p + plot_layout(guides = "collect")
+#ggtitle("Violin plot of proteomic data in lung cancer")
+#ggtitle("Violin plot of metabolomic data in lung cancer")
+pdf("../results/plots/Violin_plots_data.pdf", width = 14)
+combined.violin +  plot_annotation(
+  tag_levels = "A",
+   tag_suffix = ')'
+)
+dev.off()
+```
+# PCA
+
+```{r}
+pca1 <- plot(plots_prot[[2]]) + ggtitle("PCA of Proteomic Data in Lung Cancer") +theme(plot.title = element_text(hjust = 0.5))
+pca2 <- plot(plots_met[[2]]) + ggtitle("PCA of Metabolomic Data in Lung Cancer") +theme(plot.title = element_text(hjust = 0.5))
+comb_pca <- pca1 + pca2 & theme(legend.position = "right")
+combined.pca <- comb_pca + plot_layout(guides = "collect")
+#ggtitle("Violin plot of proteomic data in lung cancer")
+#ggtitle("Violin plot of metabolomic data in lung cancer")
+pdf("../results/plots/PCA_plots_data.pdf", width = 14)
+combined.pca +  plot_annotation(
+  tag_levels = "A",
+   tag_suffix = ')'
+)
+dev.off()
+```
+
+```{r}
+
+pdf("../results/plots/pca_proteomic.pdf")
+plot(plots_prot[[2]])
+dev.off()
+
+pdf("../results/plots/pca_metabolomic.pdf")
+plot(plots_met[[2]])
+dev.off()
+```
+# Signalling strength
+
+```{r}
+set.seed(123)
+
+# prot
+signal_p <- proteomics_DE_t
+signal_p <- signal_p[which(!is.na(signal_p$logFC)),]
+
+null_model <- pnorm(rnorm(dim(signal_p)[1]))
+plot(sort(null_model), sort(signal_p$adj.P.Val),xlim = c(1,0), ylim = c(1,0)) #its because of the NAs!!
+abline(coef = c(0,1))
+
+
+# metab
+signal_m <- metabolomics_DE_t
+signal_m <- signal_m[which(!is.na(signal_m$logFC)),]
+
+null_model <- pnorm(rnorm(dim(signal_m)[1]))
+plot(sort(null_model), sort(signal_m$adj.P.Val),xlim = c(1,0), ylim = c(1,0)) #its because of the NAs!!
+abline(coef = c(0,1))
+
+
+```
+
+```{r}
+sessionInfo()
+```
+
+
+
