@@ -1,0 +1,89 @@
+Node1,Sign,Node2,Weight
+AKT1,1,FOXA2,0.84
+AKT1,1,MYC,0.22
+AKT1,1,RPS6KB1,0.07
+ARHGEF7,1,AKT1,0.84
+CAD,1,Enzyme5635__CAD_reverse,0.59
+CAMK2A,1,CEBPB,0.03
+CASP3,1,CAD,0.06
+CASP3,1,RHOA,0.12
+CASP3,1,SLC1A2,0.06
+CEBPB,1,GOT1,0.35
+CHUK,-1,FOXA2,0.16
+CPT1A,1,Enzyme9733__CPT1A_CPT2,1
+CPT1A,1,Enzyme9734__CPT1A_CPT2,1
+CSNK2A2,1,TP53,1
+E2F4,-1,MYC,0.06
+E2F4,-1,P4HA2,0.34
+ETV3,1,E2F4,0.07
+FOXA2,1,CPT1A,1
+FOXA2,1,TAT,1
+Enzyme119800002__SLC38A2,1,Metab__L-Phenylalanine_c,0.8
+Enzyme1199__TAT_reverse,1,Metab__L-Phenylalanine_m,1
+Enzyme1199__TAT_reverse,1,Metab__alpha-Ketoglutaric acid_m,0.66
+Enzyme125000002__SLC38A2,1,Metab__L-Proline_c,0.14
+Enzyme1401__SLC6A6,1,Metab__l-Taurine_c,0.14
+Enzyme1579__XDH,1,Metab__Xanthine_c,0.5
+Enzyme177__SLC1A2_TRANSPORTER2,1,Metab__L-Aspartic acid_c,0.06
+Enzyme179400003__SLC6A6,1,Metab__l-Taurine_c,0.29
+Enzyme221500002__SLC25A1,1,Metab__alpha-Ketoglutaric acid_c,0.05
+Enzyme3636__GOT1_reverse,1,Metab__L-Aspartic acid_c,0.35
+Enzyme3636__GOT1_reverse,1,Metab__alpha-Ketoglutaric acid_c,0.35
+Enzyme5635__CAD_reverse,1,Metab__L-Aspartic acid_c,0.59
+Enzyme618000002__SLC25A1,1,Metab__alpha-Ketoglutaric acid_c,0.04
+Enzyme618400002__SLC25A1,1,Metab__alpha-Ketoglutaric acid_c,0.05
+Enzyme664900002__SLC6A6,1,Metab__l-Taurine_c,0.25
+Enzyme7347__GOT1_reverse,1,Metab__L-Phenylalanine_c,0.19
+Enzyme7347__GOT1_reverse,1,Metab__alpha-Ketoglutaric acid_c,0.19
+Enzyme7350__TAT_reverse,1,Metab__alpha-Ketoglutaric acid_c,0.03
+Enzyme8423__P4HA2,1,Metab__4-Hydroxyproline_c,1
+Enzyme8424__P4HA2,1,Metab__4-Hydroxyproline_m,1
+Enzyme922200002__SLC38A2,1,Metab__L-Methionine_c,1
+Enzyme9565__SLC6A6_reverse,1,Metab__l-Taurine_c,0.32
+Enzyme9727__XDH,1,Metab__Xanthine_c,0.5
+Enzyme9733__CPT1A_CPT2,1,Metab__Malonylcarnitine_c,1
+Enzyme9734__CPT1A_CPT2,1,Metab__Malonylcarnitine_m,1
+GOT1,1,Enzyme3636__GOT1_reverse,0.35
+GOT1,1,Enzyme7347__GOT1_reverse,0.19
+IFNG,1,CAMK2A,0.03
+IFNG,1,CASP3,0.12
+IFNG,1,MAP3K11,0.16
+IFNG,1,XDH,1
+MAP3K11,-1,CHUK,0.16
+MAP3K11,1,CEBPB,0.16
+MAPK1,-1,ETV3,0.07
+MAPK1,1,CAD,0.24
+MAPK1,1,CEBPB,0.16
+MAPK1,1,IFNG,0.4
+Metab__L-Proline_c,1,Enzyme8423__P4HA2,0.14
+Metab__alpha-Ketoglutaric acid_c,1,Enzyme8423__P4HA2,0.52
+Metab__alpha-Ketoglutaric acid_m,1,Enzyme221500002__SLC25A1,0.05
+Metab__alpha-Ketoglutaric acid_m,1,Enzyme618000002__SLC25A1,0.04
+Metab__alpha-Ketoglutaric acid_m,1,Enzyme618400002__SLC25A1,0.05
+Metab__alpha-Ketoglutaric acid_m,1,Enzyme8424__P4HA2,0.66
+MYC,1,CAD,0.22
+P4HA2,1,Enzyme8423__P4HA2,0.34
+P4HA2,1,Enzyme8424__P4HA2,0.34
+PTPN11,-1,IFNG,1
+RBL2,-1,MYC,0.06
+RBL2,1,E2F4,0.27
+RHOA,-1,PTPN11,1
+RHOA,1,MAPK1,0.4
+RPS6KB1,1,CAD,0.07
+SLC1A2,1,Enzyme177__SLC1A2_TRANSPORTER2,0.06
+SLC38A2,1,Enzyme119800002__SLC38A2,0.8
+SLC38A2,1,Enzyme125000002__SLC38A2,0.14
+SLC38A2,1,Enzyme922200002__SLC38A2,1
+SLC6A6,1,Enzyme1401__SLC6A6,0.14
+SLC6A6,1,Enzyme179400003__SLC6A6,0.29
+SLC6A6,1,Enzyme664900002__SLC6A6,0.25
+SLC6A6,1,Enzyme9565__SLC6A6_reverse,0.32
+TAT,1,Enzyme1199__TAT_reverse,1
+TAT,1,Enzyme7350__TAT_reverse,0.03
+TP53,-1,AKT1,0.84
+TP53,-1,MYC,0.22
+TP53,-1,SLC38A2,1
+TP53,-1,SLC6A6,1
+TP53,1,RBL2,0.27
+XDH,1,Enzyme1579__XDH,0.5
+XDH,1,Enzyme9727__XDH,0.5

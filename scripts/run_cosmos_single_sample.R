@@ -12,9 +12,8 @@ logFC_metabolomics_z <- readRDS("./results/logFC_metabolomics_z.Rda")
 logFC_proteomics_z <- readRDS("./results/logFC_proteomics_z.Rda")
 
 # use single patients of logFC_metabolomics_z and logFC_proteomics_z
-# 3 patients: e.g. "1FF2F9", "36AT2O" and "K6R512"
-
-patient <-"K6R512"
+# 3 patients: e.g. "1FF2F9", "36AT2O", "K6R512", "8JDLQY" , "ZT9UTK"
+patient <-"36AT2O"
 
 # input is z-score of logFC
 
@@ -105,8 +104,8 @@ SIF <- SIF[which(SIF$Weight != 0),]
 ATT <- merge(ATT, z_score_prot, all.x = T, by.x = "Nodes", by.y = "ID")
 ATT$Nodes <- gsub(",","_",ATT$Nodes)
 
-write_csv(SIF, file = paste("results/single_patient/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
-write_csv(ATT, file = paste("results/single_patient/",paste(patient, "_ATT.csv",sep = ""), sep = ""))
+write_csv(SIF, file = paste("results/single_patient/SIFandATT/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
+write_csv(ATT, file = paste("results/single_patient/SIFandATT/",paste(patient, "_ATT.csv",sep = ""), sep = ""))
 
 # include backwards run
 
@@ -135,8 +134,8 @@ ATT_back <- merge(ATT_back, z_score_prot, all.x = T, by.x = "Nodes", by.y = "ID"
 ATT_back$Nodes <- gsub(",","_",ATT_back$Nodes)
 
 
-write_csv(SIF_back, file = paste("results/single_patient/",paste(patient, "_SIF_back.csv",sep = ""), sep = ""))
-write_csv(ATT_back, file = paste("results/single_patient/",paste(patient, "_ATT_back.csv",sep = ""), sep = ""))
+write_csv(SIF_back, file = paste("results/single_patient/SIFandATT/",paste(patient, "_SIF_back.csv",sep = ""), sep = ""))
+write_csv(ATT_back, file = paste("results/single_patient/SIFandATT/",paste(patient, "_ATT_back.csv",sep = ""), sep = ""))
 
 SIF_full <- as.data.frame(rbind(SIF,SIF_back))
 SIF_full <- unique(SIF_full)
@@ -147,6 +146,6 @@ ATT_full <- unique(ATT_full)
 
 ATT_full <- as.data.frame(ATT_full)
 
-write_csv(SIF_full, file = paste("results/single_patient/",paste(patient, "_SIF_full.csv",sep = ""), sep = ""))
-write_csv(ATT_full, file = paste("results/single_patient/",paste(patient, "_ATT_full.csv",sep = ""), sep = ""))
+write_csv(SIF_full, file = paste("results/single_patient/SIFandATT/",paste(patient, "_SIF_full.csv",sep = ""), sep = ""))
+write_csv(ATT_full, file = paste("results/single_patient/SIFandATT/",paste(patient, "_ATT_full.csv",sep = ""), sep = ""))
 
