@@ -22,7 +22,6 @@ library(dendextend)
 library(tidyverse)
 library(ggrepel)
 library(ggplot2)
-library(metaboliteIDmapping)
 library(readxl)
 options(ggrepel.max.overlaps = Inf) 
 library(patchwork)
@@ -30,16 +29,15 @@ library(stringr)
 ```
 
 # Load decoupleR PEA and nodes of network
-use prots and metabs of PEA and generated network and visualize them in volcano plot, PCA, pheatmap (logFC).
-
+Use prots and metabs of PEA and generated network and visualize them in volcano plot (logFC).
+deregulated_genes_and_metabs is 
 ```{r}
 deregulated_genes_and_metabs <- readRDS("results/deregulated_genes_and_metabs.RDS")
+
+
 # Load succesfull nodes
 nodes_lung_full<- readRDS("results/nodes_ORA_lung_full.RData")
 nodes_lung<- readRDS("results/nodes_ORA_lung.RData")
-
-dereg_PEA_network <- deregulated_genes_and_metabs[deregulated_genes_and_metabs$feature %in% nodes_lung_full$sucesses, ] 
-
 
 # metab and prot
 logFC_proteomics_z <- readRDS("results/logFC_proteomics_z.Rda")
@@ -49,6 +47,10 @@ combined_metab_gene_hallmarks <- read_csv("support/combined_metab_gene_hallmarks
 
 Biocrates_metabolite_identifier <- read_excel("support/Biocrates_metabolite_identifier.xlsx")
 Biocrates_metabolite_identifier$feature <- gsub("[()/: -]",".",Biocrates_metabolite_identifier$feature)
+metabolomics_DE_t <- metabolomics_DE_t %>%
+  mutate(HMDB = strsplit(as.character(HMDB), "/")) %>%
+  unnest(HMDB) %>%
+  filter(HMDB != "")
 
 ##################################
 # limma ttest
@@ -325,7 +327,6 @@ dev.off()
 
 
 ```
-
 
 
 
