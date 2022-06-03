@@ -33,7 +33,10 @@ Use prots and metabs of PEA and generated network and visualize them in volcano 
 deregulated_genes_and_metabs is 
 ```{r}
 deregulated_genes_and_metabs <- readRDS("results/deregulated_genes_and_metabs.RDS")
-
+deregulated_prot <- deregulated_genes_and_metabs %>%
+  filter(layer == "proteomic")
+deregulated_met <-  deregulated_genes_and_metabs %>%
+  filter(layer == "metabolomic")
 
 # Load succesfull nodes
 nodes_lung_full<- readRDS("results/nodes_ORA_lung_full.RData")
@@ -43,55 +46,48 @@ nodes_lung<- readRDS("results/nodes_ORA_lung.RData")
 logFC_proteomics_z <- readRDS("results/logFC_proteomics_z.Rda")
 logFC_metabolomics_z <- readRDS("results/logFC_metabolomics_z.Rda")
 
-combined_metab_gene_hallmarks <- read_csv("support/combined_metab_gene_hallmarks.csv")
-
 Biocrates_metabolite_identifier <- read_excel("support/Biocrates_metabolite_identifier.xlsx")
 Biocrates_metabolite_identifier$feature <- gsub("[()/: -]",".",Biocrates_metabolite_identifier$feature)
-metabolomics_DE_t <- metabolomics_DE_t %>%
-  mutate(HMDB = strsplit(as.character(HMDB), "/")) %>%
-  unnest(HMDB) %>%
-  filter(HMDB != "")
 
 ##################################
 # limma ttest
 ##################################
+metabolomics_DE_t <- as.data.frame(read_delim("data/metabolomics_DE_t_TUvsNG.txt", 
+                                              delim = "\t", escape_double = FALSE, 
+                                              trim_ws = TRUE))
+
+metabolomics_DE_t <- merge(metabolomics_DE_t, Biocrates_metabolite_identifier, by.x = "ID", by.y = "feature")
+metabolomics_DE_t <- metabolomics_DE_t %>%
+  mutate(HMDB = strsplit(as.character(HMDB), "/")) %>%
+  unnest(HMDB) %>%
+  filter(HMDB != "")
+metabolomics_t <- metabolomics_DE_t
+metabolomics_DE_t <- metabolomics_DE_t[,c(1, 3, 5, 7, 12)] 
+metabolomics_t <- metabolomics_t[,c(1, 3, 5, 7, 12)] 
+multipleID <- unique(metabolomics_DE_t$ID)
+metabolomics_t <- metabolomics_t[0, ]
+for (i in 1:length(multipleID)) {
+  x <- which(metabolomics_DE_t$ID %in% multipleID[i])[1]
+  metabolomics_t <- rbind(metabolomics_t, metabolomics_DE_t[x,])
+}
+# use metabolics_t
+####################################
+
 proteomics_t <- readRDS("results/proteomics_DE_t.Rda")
-metabolomics_t <- readRDS("results/metabolomics_DE_t.Rda")
 
 proteomics_t <- proteomics_t[,c(3,4, 6, 8 )]
 proteomics_t <- proteomics_t[-which(proteomics_t$ID == "NA"),]
-proteomics_t<- unique(proteomics_t)
-proteomics_t <- proteomics_t %>%
-  group_by(ID) %>%
-  summarise_each(funs(mean))
-proteomics_t <- proteomics_t %>%
-  drop_na() %>%
-  column_to_rownames("ID")
+multipleID_prot <- unique(proteomics_t$ID)
+proteomics_DE_t <- proteomics_t
+proteomics_t <- proteomics_t[0,]
+for (i in 1:length(multipleID_prot)){
+  x1 <- which(proteomics_DE_t$ID %in% multipleID_prot[i])[1]
+  proteomics_t <- rbind(proteomics_t, proteomics_DE_t[x1,])
+}
+proteomics_t <- proteomics_t[!is.na(proteomics_t$logFC),]
 
-
-metabolomics_t <- metabolomics_t[,c(12, 3, 5, 7)] 
-metabolomics_t<- unique(metabolomics_t)
-metabolomics_t <- metabolomics_t %>%
-  group_by(HMDB) %>%
-  summarise_each(funs(mean))
-metabolomics_t <- metabolomics_t %>%
-  drop_na() %>%
-  column_to_rownames("HMDB")
-
-######################################################################
-combined_t <- rbind(metabolomics_t, proteomics_t)
-######################################################################
-
-metabolomics_t <- metabolomics_t %>%
-  rownames_to_column("HMDB")
-metabolomics_t_map <- left_join(metabolomics_t, metabolitesMapping, by = "HMDB" )
-metabolomics_t_map <-metabolomics_t_map %>%
-  select(HMDB, logFC, t, adj.P.Val, Name) %>%
-  unique()
-metabolomics_t_map <- metabolomics_t_map[-which(is.na(metabolomics_t_map$Name) == T), ]
-
-# only 4 HMDBs not annotated, these are:
-metabolomics_t$HMDB[which(metabolomics_t$HMDB %in% metabolomics_t_map$HMDB == F)]
+# use proteomics_t
+####################################
 
 ```
 
@@ -103,8 +99,7 @@ p_cutoff = 0.001
 
 volc.prot <- volc.prot %>%
   rename(p.val = "adj.P.Val") %>%
-  mutate(Regulation =  ifelse(p.val <= p_cutoff & abs(logFC) >=2, ifelse(logFC>2, "up", "down"), "stable")) %>%
-  rownames_to_column("ID")
+  mutate(Regulation =  ifelse(p.val <= p_cutoff & abs(logFC) >=2, ifelse(logFC>2, "up", "down"), "stable"))
 
 volc.prot["significance"] <-  "not significant"
 volc.prot[which(volc.prot$p.val < p_cutoff & abs(volc.prot$logFC) < 2 ),"significance"] <- "significant"
@@ -120,9 +115,9 @@ prot.volc <-  ggplot(volc.prot, aes(x = logFC, y = -log10(p.val), col = Regulati
   geom_hline(yintercept=-log10(p_cutoff), lty=4,col="black",lwd=0.8) +
   geom_vline(xintercept=c(-2,2),lty=4,col="black",lwd=0.8) +
    geom_text_repel(data=volc.prot.filter, aes(label=ID), show.legend = F) +
-  ggtitle("Differentially Expressed Proteins in Lung Cancer") +
+  ggtitle("Differentially expressed proteins in lung cancer") +
   xlab("log2(fold change)") + 
-  ylab("-log10 (adj. p-value)") +
+  ylab("-log10(adj. p-value)") +
   theme_bw() + 
   theme(plot.title = element_text(hjust = 0.5)
         #legend.title = element_blank(),
@@ -139,7 +134,7 @@ dev.off()
 # Volcano Plot metab
 ```{r}
 # format for filter 
-volc.met <- metabolomics_t_map
+volc.met <- metabolomics_t
 p_cutoff = 0.001
 
 
@@ -155,13 +150,13 @@ volc.met[which(volc.met$p.val < p_cutoff & abs(volc.met$logFC) > 1 ),"significan
 volc.met.filter <- volc.met %>%
   filter(significance=="significant & fold-change")
 
-met.volc <-  ggplot(volc.met, aes(x = logFC, y = -log10(p.val), col = Regulation, label = Name)) +
+met.volc <-  ggplot(volc.met, aes(x = logFC, y = -log10(p.val), col = Regulation, label = ID)) +
   geom_point(alpha=0.4, size=2) +
   scale_color_manual(values=c("blue", "grey","red")) +
   geom_hline(yintercept=-log10(p_cutoff), lty=4,col="black",lwd=0.8) +
   geom_vline(xintercept=c(-1,1),lty=4,col="black",lwd=0.8) +
-   geom_text_repel(data=volc.met.filter, aes(label=Name), show.legend = F) +
-  ggtitle("Differentially Abundant Metabolites in Lung Cancer") +
+   geom_text_repel(data=volc.met.filter, aes(label=ID), show.legend = F) +
+  ggtitle("Differentially abundant metabolites in lung cancer") +
   xlab("log2(fold change)") + 
   ylab("-log10(adj. p-value)") +
   theme_bw() + 
@@ -190,142 +185,121 @@ combined.volc +  plot_annotation(
 dev.off()
 ```
 
-
-
-# PROTEINS AND METAB OUT OF NETWORK
-e.g. deregulated_genes_and_metabs -> in volcano plot or heatmap, PCA
-dereg_PEA_network, deregulated_genes_and_metabs, f_deregulated_genes_and_metabs
+# main drivers in pathways of PEA
+# met
+Select of every pathway the top 5 main drivers -> highest abs t- value
 ```{r}
-volc.prot.x <- proteomics_t
-p_cutoff = 0.001
+# deregulated_prot
+# deregulated_met
+Biocrates_metabolite_identifier <- Biocrates_metabolite_identifier %>%
+  mutate(HMDB = strsplit(as.character(HMDB), "/")) %>%
+  unnest(HMDB) %>%
+  filter(HMDB != "")
+deregulated_met <- deregulated_met %>%
+  dplyr::rename(mapping = "feature")
+dereg_metabolomics <- merge(deregulated_met, Biocrates_metabolite_identifier, by.x = "mapping", by.y = "HMDB")
+dereg_metabolomics <- dereg_metabolomics[,c(1,2,4)]
+dereg_metabolomics_t <- merge(metabolomics_t, dereg_metabolomics, by.x = "ID", by.y ="feature")
+dereg_metabolomics_t <- dereg_metabolomics_t[,-6]
+dereg_metabolomics_t <- dereg_metabolomics_t[!duplicated(dereg_metabolomics_t),]
 
-volc.prot.x <- volc.prot.x %>%
-  rename(p.val = "adj.P.Val") %>%
-  rownames_to_column("ID")
-
-volc.prot.x$network_appearance <- "not in network"
-volc.prot.x$network_appearance[which(volc.prot.x$ID %in% nodes_lung_full[[1]])] <- "network"
-
-
-volc.prot.x.filter <- volc.prot.x[which(volc.prot.x$ID %in% nodes_lung_full[[1]]), ]
-volc.prot.x.filter
-
-prot.volc.x <-  ggplot(volc.prot.x, aes(x = logFC, y = -log10(p.val), col = network_appearance, label = ID)) +
-  geom_point(alpha=0.4, size=2) +
-  scale_color_manual(values=c("red","grey")) + 
-  geom_hline(yintercept=-log10(p_cutoff), lty=4,col="black",lwd=0.8) +
-  geom_vline(xintercept=c(-2,2),lty=4,col="black",lwd=0.8) +
-   geom_text_repel(data=volc.prot.x.filter, aes(label=ID), show.legend = F) +
-  ggtitle("Nodes of COSMOS network in Lung Cancer") +
-  xlab("log2(fold change)") + 
-  ylab("-log10 (adj. p-value)") +
-  theme_bw() + 
-  theme(plot.title = element_text(hjust = 0.5)
-        #legend.title = element_blank(),
-        #legend.text = element_text(size=10),
-        #legend.key.size = unit(3,"line")
-        )
-prot.volc.x
+# Select of every pathway the top 5 main drivers -> highest abs t- value
+dereg_metabolomics_t <- dereg_metabolomics_t %>%
+  group_by(term) %>%
+  arrange(desc(abs(t))) %>%
+  slice(1:5)
 ```
 
-# MYC TARGETS PEA in volcano plots metab and prot
+# Volc plot met
 ```{r}
-MYC_deregulated_genes_and_metabs <- deregulated_genes_and_metabs %>%
-  filter(term == "MYC TARGETS V1")
-
-volc.prot.MYC <- proteomics_t
-p_cutoff = 0.01
-
-volc.prot.MYC <- volc.prot.MYC %>%
-  rename(p.val = "adj.P.Val") %>%
-  rownames_to_column("ID")
-
-volc.prot.MYC$MYC_targets <- "no target of MYC"
-volc.prot.MYC$MYC_targets[which(volc.prot.MYC$ID %in% MYC_deregulated_genes_and_metabs$feature)] <- "MYC target"
-  
-##
-volc.prot.MYC.filter <- volc.prot.MYC[which(volc.prot.MYC$ID %in% MYC_deregulated_genes_and_metabs$feature), ]
-#filter for labeling significant Proteins in MYC pathway
-volc.prot.MYC.filter <- volc.prot.MYC.filter %>%
-  filter(p.val < p_cutoff & abs(logFC) >= 1)
-##
+# volcano plot
+volc.d.met <- metabolomics_t
+volc.d.met <- left_join(volc.d.met, dereg_metabolomics_t)
+subset.missing <- which(is.na(volc.d.met$term))
+volc.d.met[subset.missing,6] <- "not relevant"
+colnames(volc.d.met)[6] <- "pathway"
+multiplevolcID <- unique(dereg_metabolomics_t$ID)
+volc.d.met.filter <- dereg_metabolomics_t
+volc.d.met.filter <- volc.d.met.filter[0, ]
+for (i in 1:length(multiplevolcID)) {
+  x <- which(dereg_metabolomics_t$ID %in% multiplevolcID[i])[1]
+  volc.d.met.filter <- rbind(volc.d.met.filter, dereg_metabolomics_t[x,])
+}
+# volc.d.met.filter -> for labelling
 
 
-prot.volc.MYC <-  ggplot(volc.prot.MYC, aes(x = logFC, y = -log10(p.val), col = MYC_targets, label = ID)) +
-  geom_point(alpha=0.4, size=2) +
-  scale_color_manual(values=c("red","grey")) + 
-  geom_hline(yintercept=-log10(p_cutoff), lty=4,col="black",lwd=0.8) +
-  geom_vline(xintercept=c(-1,1),lty=4,col="black",lwd=0.8) +
-  geom_text_repel(data=volc.prot.MYC.filter, aes(label=ID), show.legend = F) +
-  ggtitle("MYC Targets in Proteomics of Lung Cancer") +
+volc.PEA.drivers <-  ggplot(volc.d.met, aes(x = logFC, y = -log10(adj.P.Val), col = pathway, alpha=factor(pathway))) +
+  geom_point(size=3,  position = position_jitter(w =0.04)) +
+  geom_text_repel(data=volc.d.met.filter, aes(x = logFC, y = -log10(adj.P.Val), label=ID), show.legend = F, inherit.aes = F) +
+  scale_color_manual(values = c("ANDROGEN RESPONSE" = "blue", "APICAL JUNCTION" = "red", "G2M CHECKPOINT" = "orange", "GLYCOLYSIS" = "green", "HYPOXIA" = "purple", "not relevant" = "grey")) +
+  scale_alpha_manual(values = c("ANDROGEN RESPONSE" = 0.8, "APICAL JUNCTION" = 0.8, "G2M CHECKPOINT" = 0.8, "GLYCOLYSIS" = 0.8, "HYPOXIA" = 0.8, "not relevant" = 0.4), guide = "none") +
+  ggtitle("Main drivers of deregulated pathways in metabolomics") +
   xlab("log2(fold change)") + 
-  ylab("-log10 (adj. p-value)") +
+  ylab("-log10(adj. p-value)") +
   theme_bw() + 
-  theme(plot.title = element_text(hjust = 0.5)
-        #legend.title = element_blank(),
-        #legend.text = element_text(size=10),
-        #legend.key.size = unit(3,"line")
-        )
-prot.volc.MYC
+  theme(plot.title = element_text(hjust = 0.5), 
+        #legend.position="right", 
+        #legend.title = element_blank()
+        ) 
+volc.PEA.drivers
 
-
-############################################################################
-############################################################################
-
-
-MYC_deregulated_genes_and_metabs <- deregulated_genes_and_metabs %>%
-  filter(term == "MYC TARGETS V1")
-
-volc.met.MYC <- metabolomics_t_map
-p_cutoff = 0.01
-
-volc.met.MYC <- volc.met.MYC %>%
-  rename(p.val = "adj.P.Val")
-
-volc.met.MYC$MYC_targets <- "no target of MYC"
-volc.met.MYC$MYC_targets[which(volc.met.MYC$HMDB %in% MYC_deregulated_genes_and_metabs$feature)] <- "MYC target"
-  
-###
-volc.met.MYC.filter <- volc.met.MYC[which(volc.met.MYC$HMDB %in% MYC_deregulated_genes_and_metabs$feature), ]
-#filter for labeling significant metabolites in MYC pathway
-
-
-#1,4−Butanediamine, N,N'−bis(3−aminopropyl)− is spermine
-volc.met.MYC.filter[8, "Name"] <- "Spermine"
-
-##
-
-
-met.volc.MYC <-  ggplot(volc.met.MYC, aes(x = logFC, y = -log10(p.val), col = MYC_targets, label = Name)) +
-  geom_point(alpha=0.4, size=2) +
-  scale_color_manual(values=c("red","grey")) +
-  geom_text_repel(data=volc.met.MYC.filter, aes(label=Name), show.legend = F) +
-  ggtitle("MYC targets in Metabolomics of Lung Cancer") +
-  xlab("log2(fold change)") + 
-  ylab("-log10 (adj. p-value)") +
-  theme_bw() + 
-  theme(plot.title = element_text(hjust = 0.5)
-        #legend.title = element_blank(),
-        #legend.text = element_text(size=10),
-        #legend.key.size = unit(3,"line")
-        )
-met.volc.MYC
-
-
-
-combined_MYC <-  prot.volc.MYC + met.volc.MYC & theme(legend.position = "right")
-combined.volc.MYC <- combined_MYC + plot_layout(guides = "collect")
-combined.volc.MYC
-
-
-pdf("results/plots/MYC_targets_volcano_plot.pdf", width = 12)
-combined.volc.MYC +  plot_annotation(
-  tag_levels = "A",
-   tag_suffix = ')'
-)
+pdf("results/plots/main_drivers_PEA_metab.pdf", width = 10)
+volc.PEA.drivers
 dev.off()
+```
+
+# prot
+Select of every pathway the top 5 main drivers -> highest abs t- value
+```{r}
+# deregulated_prot
+# deregulated_met
+dereg_proteomics_t <- merge(proteomics_t, deregulated_prot, by.x = "ID", by.y ="feature")
+dereg_proteomics_t <- dereg_proteomics_t[,-6]
+dereg_proteomics_t <- dereg_proteomics_t[!duplicated(dereg_proteomics_t),]
+
+# Select of every pathway the top 5 main drivers -> highest abs t- value
+dereg_proteomics_t <- dereg_proteomics_t %>%
+  group_by(term) %>%
+  arrange(desc(abs(t))) %>%
+  slice(1:5)
+```
+
+# Volc plot met
+```{r}
+# volcano plot
+volc.d.prot <- proteomics_t
+volc.d.prot <- left_join(volc.d.prot, dereg_proteomics_t)
+subset.missing <- which(is.na(volc.d.prot$term))
+volc.d.prot[subset.missing,5] <- "not relevant"
+colnames(volc.d.prot)[5] <- "pathway"
+multiplevolcID_prot <- unique(dereg_proteomics_t$ID)
+volc.d.prot.filter <- dereg_proteomics_t
+volc.d.prot.filter <- volc.d.prot.filter[0, ]
+for (i in 1:length(multiplevolcID_prot)) {
+  x <- which(dereg_proteomics_t$ID %in% multiplevolcID_prot[i])[1]
+  volc.d.prot.filter <- rbind(volc.d.prot.filter, dereg_proteomics_t[x,])
+}
+# volc.d.prot.filter -> for labelling
 
 
+volc.PEA.drivers.prot <-  ggplot(volc.d.prot, aes(x = logFC, y = -log10(adj.P.Val), col = pathway, alpha=factor(pathway))) +
+  geom_point(size=3,  position = position_jitter(w =0.04)) +
+  geom_text_repel(data=volc.d.prot.filter, aes(x = logFC, y = -log10(adj.P.Val), label=ID), show.legend = F, inherit.aes = F) +
+  scale_color_manual(values = c("COAGULATION" = "blue", "E2F TARGETS" = "red", "EPITHELIAL MESENCHYMAL TRANSITION" = "orange", "G2M CHECKPOINT" = "green", "GLYCOLYSIS" = "purple", "not relevant" = "grey")) +
+  scale_alpha_manual(values = c("COAGULATION" = 0.8, "E2F TARGETS" = 0.8, "EPITHELIAL MESENCHYMAL TRANSITION" = 0.8, "G2M CHECKPOINT" = 0.8, "GLYCOLYSIS" = 0.8, "not relevant" = 0.4), guide = "none") +
+  ggtitle("Main drivers of deregulated pathways in proteomics") +
+  xlab("log2(fold change)") + 
+  ylab("-log10(adj. p-value)") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5), 
+        #legend.position="right", 
+        #legend.title = element_blank()
+        ) 
+volc.PEA.drivers.prot
+
+pdf("results/plots/main_drivers_PEA_proteomics.pdf", width = 10)
+volc.PEA.drivers.prot
+dev.off()
 ```
 
 
