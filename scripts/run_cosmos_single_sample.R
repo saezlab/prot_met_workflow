@@ -13,7 +13,7 @@ logFC_proteomics_z <- readRDS("./results/logFC_proteomics_z.Rda")
 
 # use single patients of logFC_metabolomics_z and logFC_proteomics_z
 # 3 patients: e.g. "1FF2F9", "36AT2O", "K6R512", "8JDLQY" , "ZT9UTK"
-patient <-"36AT2O"
+patient <-"ZT9UTK"
 
 # input is z-score of logFC
 
@@ -104,8 +104,8 @@ SIF <- SIF[which(SIF$Weight != 0),]
 ATT <- merge(ATT, z_score_prot, all.x = T, by.x = "Nodes", by.y = "ID")
 ATT$Nodes <- gsub(",","_",ATT$Nodes)
 
-write_csv(SIF, file = paste("results/single_patient/SIFandATT/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
-write_csv(ATT, file = paste("results/single_patient/SIFandATT/",paste(patient, "_ATT.csv",sep = ""), sep = ""))
+write_csv(SIF, file = paste("results/single_patient/",paste(patient, "_SIF.csv",sep = ""), sep = ""))
+write_csv(ATT, file = paste("results/single_patient/",paste(patient, "_ATT.csv",sep = ""), sep = ""))
 
 # include backwards run
 

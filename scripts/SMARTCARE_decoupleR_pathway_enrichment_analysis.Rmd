@@ -244,7 +244,7 @@ mean_corr_integrated_average
 ph_corr <- matrix(NA, ncol = 3, nrow=5)
 
 colnames(ph_corr) <- c("Proteomics", "Integrated", "Integrated Average")
-rownames(ph_corr) <- c("Patient_K6R512", "Patient_KWF2HW", "Patient_ZQ021J", "Patient_ZT9UTK", "Average")
+rownames(ph_corr) <- c("Patient_A", "Patient_B", "Patient_C", "Patient_D", "Average")
 
 
 ph_corr[c(1:4),1] <- corr_proteomics
@@ -294,7 +294,7 @@ mean_corr_metab_autoSP3
 ph_corr_m <- matrix(NA, ncol = 2, nrow=5)
 
 colnames(ph_corr_m) <- c("Metab and MTBE", "Metab and autoSP3")
-rownames(ph_corr_m) <- c("Patient_K6R512", "Patient_KWF2HW", "Patient_ZQ021J", "Patient_ZT9UTK", "Average")
+rownames(ph_corr_m) <- c("Patient_A", "Patient_B", "Patient_C", "Patient_D", "Average")
 
 
 ph_corr_m[c(1:4),1] <- corr_metab_MTBE
