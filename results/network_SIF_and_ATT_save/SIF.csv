@@ -1,0 +1,56 @@
+Node1,Sign,Node2,Weight
+ALDH9A1,1,Enzyme3860__ALDH9A1,1
+ALDH9A1,1,Enzyme963__ALDH9A1,1
+ARG1,1,Enzyme3632__ARG1,1
+CPT1A,1,Enzyme8232__CPT1A_reverse,1
+DDC,1,Enzyme895__DDC,0.5
+Enzyme125000002__SLC38A2,1,Metab__L-Proline_c,1
+Enzyme1671__SLC25A10_TRANSPORTER1,1,Metab__Butanedioic acid_m,0.2
+Enzyme167200002__SLC25A10,1,Metab__Butanedioic acid_m,0.2
+Enzyme3632__ARG1,1,Metab__L-Ornithine monohydrochloride_c,1
+Enzyme3860__ALDH9A1,1,Metab__L-Lactic acid_c,1
+Enzyme576000002__SLC38A2,1,Metab__L-Cysteine_c,1
+Enzyme617500001__SLC25A1,1,Metab__Butanedioic acid_m,0.2
+Enzyme7346__ODC1,1,Metab__Putrescine_c,1
+Enzyme8232__CPT1A_reverse,1,Metab__Dodecanoylcarnitine_c,1
+Enzyme8423__P4HA1,1,Metab__Butanedioic acid_c,0.5
+Enzyme8423__P4HA2,1,Metab__Butanedioic acid_c,0.5
+Enzyme895__DDC,1,Metab__Histamine_c,0.5
+Enzyme9124__SLC22A2,1,Metab__Histamine_c,0.5
+Enzyme918200002__SLC16A1,1,Metab__L-Lactic acid_m,1
+Enzyme9549__SRM,1,"Metab__1,4-Butanediamine, N,N'-bis(3-aminopropyl)-_c",1
+Enzyme955900002__SLC25A10,1,Metab__Butanedioic acid_m,0.2
+Enzyme963__ALDH9A1,1,Metab__D-Lactic acid_c,1
+Enzyme9813__SLC25A10_TRANSPORTER1,1,Metab__Butanedioic acid_m,0.2
+HNRNPK,1,TP53,1
+JUN,-1,CPT1A,0.9
+JUN,-1,MYC,0.9
+JUN,-1,TH,0.45
+JUN,-1,TP53,0.9
+JUN,1,ARG1,0.9
+Metab__L-Proline_c,1,Enzyme8423__P4HA1,0.5
+Metab__L-Proline_c,1,Enzyme8423__P4HA2,0.5
+Metab__L-Lactic acid_c,1,Enzyme918200002__SLC16A1,1
+Metab__L-Ornithine monohydrochloride_c,1,Enzyme7346__ODC1,1
+Metab__Butanedioic acid_c,1,Enzyme1671__SLC25A10_TRANSPORTER1,0.2
+Metab__Butanedioic acid_c,1,Enzyme167200002__SLC25A10,0.2
+Metab__Butanedioic acid_c,1,Enzyme617500001__SLC25A1,0.2
+Metab__Butanedioic acid_c,1,Enzyme955900002__SLC25A10,0.2
+Metab__Butanedioic acid_c,1,Enzyme9813__SLC25A10_TRANSPORTER1,0.2
+MYC,-1,ALDH9A1,1
+MYC,1,RPL10,1
+MYC,1,RPL23,1
+MYC,1,SRM,1
+PARP1,1,TP53,1
+PRKDC,1,TP53,1
+PRKDC,1,USF1,0.5
+RPL10,-1,JUN,0.9
+RPL23,1,TP53,1
+SLC22A2,1,Enzyme9124__SLC22A2,0.5
+SLC38A2,1,Enzyme125000002__SLC38A2,1
+SLC38A2,1,Enzyme576000002__SLC38A2,1
+SRM,1,Enzyme9549__SRM,1
+TH,1,DDC,0.5
+TP53,-1,SLC38A2,1
+USF1,1,P4HA1,0.5
+USF1,1,SLC22A2,0.5

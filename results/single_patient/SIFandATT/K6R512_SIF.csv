@@ -1,0 +1,15 @@
+Node1,Sign,Node2,Weight
+AR,1,DDC,1
+DDC,1,Enzyme895__DDC,1
+Enzyme10473__PLPBP,1,Metab__D-Alanine_c,1
+Enzyme1765__orphanReacALAtmi,1,Metab__L-Alanine_m,1
+Enzyme263900002__SLC3A2_SLC7A6_TRANSPORTER1_TRANSPORTER3,1,Metab__L-Alanine_c,1
+Enzyme895__DDC,1,Metab__Histamine_c,1
+MDM2,-1,AR,0.5
+Metab__L-Alanine_c,1,Enzyme10473__PLPBP,1
+Metab__L-Alanine_c,1,Enzyme1765__orphanReacALAtmi,1
+PRKDC,1,MDM2,0.5
+PRKDC,1,TP53,0.5
+RPL23,1,TP53,0.5
+SLC3A2,1,Enzyme263900002__SLC3A2_SLC7A6_TRANSPORTER1_TRANSPORTER3,1
+TP53,-1,AR,0.5

@@ -3,6 +3,8 @@ title: "decoupleR_pathway_enrichment_analysis"
 author: "Dustin Schilling"
 date: "17 5 2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -17,18 +19,22 @@ library(decoupleR)
 library(dplyr)
 library(tidyr)
 library(tibble)
+library(ggplot2)
+library(pheatmap)
+library(patchwork)
+library(cowplot)
 ```
 
 
 # Input Data
 
 ```{r}
-logFC_proteomics_z <- readRDS("../results/logFC_proteomics_z.Rda")
-logFC_metabolomics_z <- readRDS("../results/logFC_metabolomics_z.Rda")
+logFC_proteomics_z <- readRDS("results/logFC_proteomics_z.Rda")
+logFC_metabolomics_z <- readRDS("results/logFC_metabolomics_z.Rda")
 
-combined_metab_gene_hallmarks <- read_csv("../support/combined_metab_gene_hallmarks.csv")
+combined_metab_gene_hallmarks <- read_csv("support/combined_metab_gene_hallmarks.csv")
 
-Biocrates_metabolite_identifier <- read_excel("../support/Biocrates_metabolite_identifier.xlsx")
+Biocrates_metabolite_identifier <- read_excel("support/Biocrates_metabolite_identifier.xlsx")
 Biocrates_metabolite_identifier$feature <- gsub("[()/: -]",".",Biocrates_metabolite_identifier$feature)
 
 
@@ -37,11 +43,15 @@ network_combined$mor <- 1
 network_combined$term <- gsub("HALLMARK_","", network_combined$term)
 network_combined$term <- gsub("_", " ", network_combined$term)
 
+# network seperated
+network_met <- network_combined[which(grepl("HMDB", network_combined$feature)),]
+network_prot <- network_combined[!(network_combined$feature %in% network_met$feature),]
+
 ##################################
 # limma ttest
 ##################################
-proteomics_t <- readRDS("../results/proteomics_DE_t.Rda")
-metabolomics_t <- readRDS("../results/metabolomics_DE_t.Rda")
+proteomics_t <- readRDS("results/proteomics_DE_t.Rda")
+metabolomics_t <- readRDS("results/metabolomics_DE_t.Rda")
 
 proteomics_t <- proteomics_t[,c(3,6 )]
 proteomics_t <- proteomics_t[-which(proteomics_t$ID == "NA"),]
@@ -119,30 +129,194 @@ combined_mat_z <- rbind(prot_decoupler_z, metab_decoupler_z)
 
 ##### Do the NA's cause problems -> drop_NA() commands deletes a lot of rows (HMDB, proteins)
 ##### Is there another approach to this?
+```
+
+# norm_wmean on DE genes - prot and metab seperated
+
+```{r}
+# Prot
+res_wmean_PEA_prot <-  run_wmean(mat = proteomics_t, net = network_prot, .source = "term", .target = "feature", .mor="mor")
+res_wmean_PEA_prot <- res_wmean_PEA_prot %>%
+  filter(statistic == 'norm_wmean')
+
+# Metab
+res_wmean_PEA_met <-  run_wmean(mat = metabolomics_t, net = network_met, .source = "term", .target = "feature", .mor="mor")
+res_wmean_PEA_met <- res_wmean_PEA_met %>%
+  filter(statistic == 'norm_wmean')
 
 
-
-
-
+pathway_select_prot <- res_wmean_PEA_prot %>%
+  dplyr::filter(p_value < 0.05) %>%  # filter for significance
+  dplyr::select("source", "score", "p_value") %>%
+  dplyr::rename(pathway = "source", pvalue = "p_value") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  dplyr::arrange(pvalue) %>%
+  slice(1:5) %>%
+  dplyr::mutate(layer  = "proteomic")
+pathway_select_met <- res_wmean_PEA_met %>%
+  dplyr::filter(p_value < 0.05) %>%  # filter for significance
+  dplyr::select("source", "score", "p_value") %>%
+  dplyr::rename(pathway = "source", pvalue = "p_value") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  dplyr::arrange(pvalue) %>%
+  slice(1:5) %>%
+  dplyr::mutate(layer = "metabolomic")
+pathway_select_sep <- rbind(pathway_select_met, pathway_select_prot)
 
 
 ```
 
+# Visualize together
+```{r}
+
+colors1 <- c("steelblue", "indianred")
+ggplot_norm_sep <-  ggplot(pathway_select_sep, aes(y = reorder(pathway, score), x = score, fill = layer)) +  
+    geom_bar(stat = "identity") +
+    scale_x_continuous(breaks = seq(-8, 12, by= 2)) +
+    theme_bw() +
+  geom_vline(xintercept = 0, linetype = 2) +
+    theme(axis.title = element_text(face = "bold", size = 10),
+          axis.text.y = element_text(size = 7),
+          axis.text.x = element_text(size = 6)) +
+    ylab("") +
+  guides(fill=guide_legend(title="omic layer")) + 
+    scale_fill_manual(values = colors1)
+
+
+leg1 <- get_legend(ggplot_norm_sep)
+
+p1 <- ggplot(pathway_select_prot, aes(y = reorder(pathway, score), x = score)) +
+  geom_bar(stat = "identity", fill = colors[2])+
+  theme_bw() + 
+  geom_vline(xintercept = 0, linetype = 2) +
+  theme(axis.text.y = element_text(size = 7),
+        axis.text.x = element_text(size = 6)) +
+  ylab("")
+
+m1 <- ggplot(pathway_select_met, aes(y = reorder(pathway, score), x = score)) +
+  geom_bar(stat = "identity", fill =colors[1]) +
+  theme_bw() +
+  geom_vline(xintercept = 0, linetype = 2) +
+  theme(axis.text.y = element_text(size = 7),
+          axis.text.x = element_text(size = 6)) +
+  ylab("")
+
+comb_ggplot_sep <-  m1 + p1 
+
+
+pm1 <- plot_grid(comb_ggplot_sep, leg1, rel_widths = c(3, .4))  + 
+  plot_annotation(title = "Deregulated pathways in lung cancer (norm_wmean)",
+  theme = theme(plot.title = element_text(size = 18)) & theme(plot.title = element_text(hjust = 0.5))
+)
+pm1
+
+pdf("results/plots/norm_wmean_pathway_scores_HALLMARK_seperated.pdf", width = 12, height = 4)
+pm1
+dev.off()
+```
+
+# filter genes out of successful nodes
+```{r}
+# filter manually
+dereg_pathway_met <- pathway_select_met$pathway
+dereg_pathway_prot<- pathway_select_prot$pathway
+
+deregulated_metabs <- data.frame(matrix(ncol = 2))
+colnames(deregulated_metabs) <- c("feature", "term")
+deregulated_genes <- data.frame(matrix(ncol = 2))
+colnames(deregulated_genes) <- c("feature", "term")
+
+for (i in 1:length(dereg_pathway_prot)) {
+   x1 <- network_prot[which(network_prot$term %in% dereg_pathway_prot[i]), c(1,2) ]
+   deregulated_genes <- rbind(deregulated_genes, x1)
+}
+deregulated_genes <- deregulated_genes[-1,]
+deregulated_genes$layer <- "proteomic"
+for (i in 1:length(dereg_pathway_met)) {
+   x2 <- network_met[which(network_met$term %in% dereg_pathway_met[i]), c(1,2) ]
+   deregulated_metabs <- rbind(deregulated_metabs, x2)
+}
+deregulated_metabs <- deregulated_metabs[-1,]
+deregulated_metabs$layer <- "metabolomic"
+
+deregulated_genes_and_metabs <- rbind(deregulated_genes, deregulated_metabs)
+
+saveRDS(deregulated_genes_and_metabs, "results/deregulated_genes_and_metabs.RDS")
+```
+
+
+# norm_wmean on DE genes - combined
+The combination of the the metabolic and proteomic layer in pathway enrichment analysis leads to completely different results, than on their own layer. Therefore the pathway of the 
+```{r}
+res_wmean_PEA_comb <-  run_wmean(mat = combined_t, net = network_combined, .source = "term", .target = "feature", .mor="mor")
+res_wmean_PEA_comb <- res_wmean_PEA_comb %>%
+  filter(statistic == 'norm_wmean')
+```
+
+# Visualization of all DE genes in pathways
+
+```{r}
+pathway_select_comb <- res_wmean_PEA_comb %>%
+  dplyr::filter(p_value < 0.05) %>%  # filter for significance
+  dplyr::select("source", "score", "p_value") %>%
+  dplyr::rename(pathway = "source", pvalue = "p_value") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  dplyr::arrange(pvalue) %>%
+  slice(1:10)
+
+ggplot_normwmean <- ggplot(pathway_select_comb, aes(y = reorder(pathway, score), x = score)) +  
+    geom_bar(aes(fill = score), stat = "identity") +
+    scale_fill_gradient2(low = "darkblue", high = "indianred", 
+        mid = "whitesmoke", midpoint = 0) + 
+    scale_x_continuous(breaks = seq(-8, 12, by= 2)) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold", size = 10),
+          axis.text.y = element_text(size = 7),
+          axis.text.x = element_text(size = 6)) +
+    ylab("") +
+    labs(title = "Normalized weighted mean scores in lung cancer \n for pathways in the Hallmarks gene set") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+pdf("results/plots/norm_wmean_pathway_scores_HALLMARK.pdf")
+ggplot_normwmean
+dev.off()
+```
 
 # norm_wmean on single patient level
 ```{r}
+# take pathways from before
+
 res_wmean_PEA_sp <-  run_wmean(mat = combined_mat_z, net = network_combined, .source = "term", .target = "feature", .mor="mor")
 res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
   filter(statistic == 'norm_wmean')
+
+res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
+  select(condition, source, score) %>%
+  dplyr::rename(pathway = "source") %>%
+  dplyr::mutate(pathway = as.factor(pathway)) %>%
+  dplyr::mutate(score = as.numeric(score)) %>%
+  pivot_wider(names_from = condition, values_from = score)
+
+subset.p <- which(res_wmean_PEA_sp$pathway %in% dereg_pathway)
+  
+res_wmean_PEA_sp <- res_wmean_PEA_sp[subset.p,]
+res_wmean_PEA_sp <- res_wmean_PEA_sp %>%
+  column_to_rownames("pathway")
 ```
 
-
-# norm_wmean on DE genes
+# pheatmap for single patients
 ```{r}
-res_wmean_PEA <-  run_wmean(mat = combined_t, net = network_combined, .source = "term", .target = "feature", .mor="mor")
-res_wmean_PEA <- res_wmean_PEA %>%
-  filter(statistic == 'norm_wmean')
+p_res_PEA_sp <- pheatmap(res_wmean_PEA_sp)
+
+pdf("results/plots/pheatmap_single_patients_decoupler_scores_norm_wmean.pdf")
+p_res_PEA_sp
+dev.off()
 ```
 
-
+```{r}
+sessionInfo()
+```
 

@@ -39,10 +39,6 @@ proteomics_DE_t <- proteomics_DE_t %>%
 cosmos_prot_input <- proteomics_DE_t$t
 names(cosmos_prot_input) <- proteomics_DE_t$ID
 
-# save proteomics_DE_t and metabolomics_DE_t
-saveRDS(metabolomics_DE_t, file = paste("results/", "metabolomics_DE_t.Rda", sep = ""))
-saveRDS(proteomics_DE_t, file = paste("results/", "proteomics_DE_t.Rda", sep = ""))
-#
 
 cosmos_met_input <- cosmos_met_input[which(abs(cosmos_met_input) > 3)]
 cosmos_prot_input <- cosmos_prot_input[which(abs(cosmos_prot_input) > 6)]
@@ -69,10 +65,10 @@ sig_input <- cosmosR:::filter_input_nodes_not_in_pkn(cosmos_prot_input, meta_net
 test_for <- preprocess_COSMOS_signaling_to_metabolism(meta_network = meta_network,
                                                       signaling_data = sig_input,
                                                       metabolic_data = metab_input,
-                                                      maximum_network_depth = 4,
+                                                      maximum_network_depth = 5,
                                                       CARNIVAL_options = my_options)
 
-my_options$timelimit <- 600
+my_options$timelimit <- 1200
 
 test_result_for <- run_COSMOS_signaling_to_metabolism(data = test_for,
                                                       CARNIVAL_options = my_options)
@@ -87,21 +83,14 @@ SIF <- SIF[which(SIF$Weight != 0),]
 ATT <- merge(ATT, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes", by.y = "ID")
 ATT$Nodes <- gsub(",","_",ATT$Nodes)
 
-write_csv(SIF, file = paste("results/", "SIF.csv", sep = ""))
-write_csv(ATT, file = paste("results/", "ATT.csv", sep = ""))
-
-# extract for ORA
-
-nodes_ORA = extract_nodes_for_ORA(
-  sif = SIF, 
-  att = ATT)
-
-saveRDS(nodes_ORA, file = paste("results/", "nodes_ORA_lung.RData", sep = ""))
+write_csv(SIF, file = paste("results/final_run/", "SIF_n6.csv", sep = ""))
+write_csv(ATT, file = paste("results/final_run/", "ATT_n6.csv", sep = ""))
 
 
 # include backwards run
 
 my_options$timelimit <- 1800
+
 
 test_back <- preprocess_COSMOS_metabolism_to_signaling(meta_network = meta_network,
                                                        signaling_data = sig_input,
@@ -109,7 +98,7 @@ test_back <- preprocess_COSMOS_metabolism_to_signaling(meta_network = meta_netwo
                                                        maximum_network_depth = 4,
                                                        CARNIVAL_options = my_options)
 
-my_options$timelimit <- 600
+my_options$timelimit <- 1800
 
 test_result_back <- run_COSMOS_metabolism_to_signaling(data = test_back,
                                                        CARNIVAL_options = my_options)
@@ -126,8 +115,8 @@ ATT_back <- merge(ATT_back, proteomics_DE_t[,c(3,6)], all.x = T, by.x = "Nodes",
 ATT_back$Nodes <- gsub(",","_",ATT_back$Nodes)
 
 
-write_csv(SIF_back, file = paste("results/",paste("SIF_back.csv",sep = ""), sep = ""))
-write_csv(ATT_back, file = paste("results/",paste("ATT_back.csv",sep = ""), sep = ""))
+write_csv(SIF_back, file = paste("results/final_run/",paste("SIF_back.csv",sep = ""), sep = ""))
+write_csv(ATT_back, file = paste("results/final_run/",paste("ATT_back.csv",sep = ""), sep = ""))
 
 SIF_full <- as.data.frame(rbind(SIF,SIF_back))
 SIF_full <- unique(SIF_full)
@@ -138,16 +127,7 @@ ATT_full <- unique(ATT_full)
 
 ATT_full <- as.data.frame(ATT_full)
 
-write_csv(SIF_full, file = paste("results/",paste("SIF_full.csv",sep = ""), sep = ""))
-write_csv(ATT_full, file = paste("results/",paste("ATT_full.csv",sep = ""), sep = ""))
-
-# extract for ORA full
-
-nodes_ORA_full = extract_nodes_for_ORA(
-  sif = SIF_full, 
-  att = ATT_full)
-
-saveRDS(nodes_ORA_full, file = paste("results/", "nodes_ORA_lung_full.RData", sep = ""))
-
+write_csv(SIF_full, file = paste("results/final_run/",paste("SIF_full.csv",sep = ""), sep = ""))
+write_csv(ATT_full, file = paste("results/final_run/",paste("ATT_full.csv",sep = ""), sep = ""))
 
 

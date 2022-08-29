@@ -1,0 +1,40 @@
+Node1,Sign,Node2,Weight
+ALDH1A3,1,Enzyme3860__ALDH1A3,1
+ALDH1A3,1,Enzyme963__ALDH1A3,1
+CTCF,-1,ALDH1A3,1
+Enzyme125000002__SLC38A2,1,Metab__L-Proline_c,1
+Enzyme1671__SLC25A10_TRANSPORTER1,1,Metab__Butanedioic acid_m,0.16666666666666663
+Enzyme167200002__SLC25A10,1,Metab__Butanedioic acid_m,0.16666666666666663
+Enzyme220600002__SLC25A1,1,Metab__Butanedioic acid_m,0.16666666666666663
+Enzyme3860__ALDH1A3,1,Metab__L-Lactic acid_c,1
+Enzyme576000002__SLC38A2,1,Metab__L-Cysteine_c,1
+Enzyme617500001__SLC25A1,1,Metab__Butanedioic acid_m,0.16666666666666663
+Enzyme8423__P4HA1,1,Metab__Butanedioic acid_c,0.5
+Enzyme8423__P4HA2,1,Metab__Butanedioic acid_c,0.5
+Enzyme9124__SLC22A2,1,Metab__Histamine_c,1
+Enzyme918200002__SLC16A1,1,Metab__L-Lactic acid_m,0.5
+Enzyme955900002__SLC25A10,1,Metab__Butanedioic acid_m,0.16666666666666663
+Enzyme963__ALDH1A3,1,Metab__D-Lactic acid_c,1
+Enzyme981__AQP9,1,Metab__L-Lactic acid_m,0.5
+Enzyme9813__SLC25A10_TRANSPORTER1,1,Metab__Butanedioic acid_m,0.16666666666666663
+HDLBP,1,CTCF,1
+HNRNPK,1,TP53,1
+Metab__L-Proline_c,1,Enzyme8423__P4HA1,0.5
+Metab__L-Proline_c,1,Enzyme8423__P4HA2,0.5
+Metab__L-Lactic acid_c,1,Enzyme918200002__SLC16A1,0.5
+Metab__L-Lactic acid_c,1,Enzyme981__AQP9,0.5
+Metab__Butanedioic acid_c,1,Enzyme1671__SLC25A10_TRANSPORTER1,0.16666666666666663
+Metab__Butanedioic acid_c,1,Enzyme167200002__SLC25A10,0.16666666666666663
+Metab__Butanedioic acid_c,1,Enzyme220600002__SLC25A1,0.16666666666666663
+Metab__Butanedioic acid_c,1,Enzyme617500001__SLC25A1,0.16666666666666663
+Metab__Butanedioic acid_c,1,Enzyme955900002__SLC25A10,0.16666666666666663
+Metab__Butanedioic acid_c,1,Enzyme9813__SLC25A10_TRANSPORTER1,0.16666666666666663
+PARP1,1,TP53,1
+PRKDC,1,TP53,1
+PRKDC,1,USF1,1
+SLC22A2,1,Enzyme9124__SLC22A2,1
+SLC38A2,1,Enzyme125000002__SLC38A2,1
+SLC38A2,1,Enzyme576000002__SLC38A2,1
+TP53,-1,SLC38A2,1
+USF1,1,P4HA1,1
+USF1,1,SLC22A2,1
