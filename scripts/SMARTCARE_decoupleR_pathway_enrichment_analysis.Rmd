@@ -186,6 +186,26 @@ mean_corr_proteomics <- mean(corr_proteomics)
 mean_corr_proteomics
 ```
 
+```{r}
+simplified_corr_matrix_MTBE_sep <- corr_matrix_MTBE_sep
+simplified_corr_matrix_MTBE_sep[abs(simplified_corr_matrix_MTBE_sep) < 2.5] <- 0
+simplified_corr_matrix_MTBE_sep <- sign(simplified_corr_matrix_MTBE_sep)
+
+simplified_corr_matrix_autoSP3_sep <- corr_matrix_autoSP3_sep
+simplified_corr_matrix_autoSP3_sep[abs(simplified_corr_matrix_autoSP3_sep) < 2.5] <- 0
+simplified_corr_matrix_autoSP3_sep <- sign(simplified_corr_matrix_autoSP3_sep)
+
+
+
+difference_proteo_hallmarks <- as.matrix(simplified_corr_matrix_MTBE_sep - simplified_corr_matrix_autoSP3_sep)
+colnames(difference_proteo_hallmarks) <- c("Patient_A","Patient_B","Patient_C","Patient_D")
+
+heatmap_plot <- ComplexHeatmap::pheatmap(abs(difference_proteo_hallmarks[rowMaxs(abs(difference_proteo_hallmarks)) > 0,]), display_numbers = F, cluster_cols = F,  cluster_rows=T, fontsize_number = 14, treeheight_row = 0, color = cols, breaks = breaks, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot
+
+heatmap_plot <- ComplexHeatmap::pheatmap(abs(difference_proteo_hallmarks), display_numbers = F, cluster_cols = F,  cluster_rows=T, fontsize_number = 14, treeheight_row = 0, color = cols, breaks = breaks, column_names_side = c("top"), fontsize = 12, angle_col = c("0"), annotation_legend =T)
+heatmap_plot
+```
 # proteomic integrated average
 
 Integrated average
@@ -237,6 +257,8 @@ corr_integrated_average
 mean_corr_integrated_average<- mean(corr_integrated_average)
 mean_corr_integrated_average
 ```
+
+
 
 
 # Visualize in table

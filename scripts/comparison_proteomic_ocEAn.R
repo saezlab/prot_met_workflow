@@ -2,6 +2,7 @@ library(readr)
 library(readxl)
 library(ocean)
 library(visNetwork)
+library(cosmosR)
 
 data("meta_network")
 meta_network <- meta_network[which(meta_network$source != meta_network$target),]
@@ -85,6 +86,8 @@ mean_ES_df <- metactivity_res$ES
 
 mean_NES_df <- metactivity_res$NES
 
+mapping_table$metab <- gsub("histamineextracellular","histamine",mapping_table$metab)
+mapping_table$metab <- gsub("sperminec10h30n4","spermine",mapping_table$metab)
 translated_results <- translate_results(regulons_df = regulons_df, t_table = t_table, mapping_table = mapping_table)
 
 translated_regulons_df <- translated_results$regulons_df
@@ -268,6 +271,13 @@ plots <- plotMetaboliteContribution(enzyme = 'SDHA_SDHD_SDHC_SDHB', stat_df = tr
 plot(plots$scatter)
 
 plots <- plotMetaboliteContribution(enzyme = 'PKM', stat_df = translated_results$t_table, 
+                                    metabolite_sets = translated_regulons_df, 
+                                    contrast_index = 1, stat_name = 'Abundance Down <==> Up (t-value)', 
+                                    scaling_factor = 3, nLabels =  15)
+
+plot(plots$scatter)
+
+plots <- plotMetaboliteContribution(enzyme = 'MDH2', stat_df = translated_results$t_table, 
                                     metabolite_sets = translated_regulons_df, 
                                     contrast_index = 1, stat_name = 'Abundance Down <==> Up (t-value)', 
                                     scaling_factor = 3, nLabels =  15)
