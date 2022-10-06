@@ -104,7 +104,8 @@ translated_regulons_df <- translated_regulons_df[,c(3,4,2)]
 ##PROTEO
 proteomics_DE_t_sp3 <- as.data.frame(read_delim("data/proteomics_DE_t_TUvsNG_autoSP3.txt", 
                                             delim = "\t", escape_double = FALSE, 
-                                            trim_ws = TRUE))
+                                            trim_ws = TRUE))[,-1]
+names(proteomics_DE_t_sp3)[1] <- "ID"
 
 proteomics_DE_t_sp3 <- proteomics_DE_t_sp3 %>%
   mutate(ID = strsplit(as.character(ID), ";")) %>%
@@ -113,7 +114,8 @@ proteomics_DE_t_sp3 <- proteomics_DE_t_sp3 %>%
 
 proteomics_DE_t_MTBE <- as.data.frame(read_delim("data/proteomics_DE_t_TUvsNG_MTBE_SP3.txt", 
                                                 delim = "\t", escape_double = FALSE, 
-                                                trim_ws = TRUE))
+                                                trim_ws = TRUE))[,-1]
+names(proteomics_DE_t_MTBE)[1] <- "ID"
 
 proteomics_DE_t_MTBE <- proteomics_DE_t_MTBE %>%
   mutate(ID = strsplit(as.character(ID), ";")) %>%
@@ -147,9 +149,12 @@ summarised_mean_NES_df <- summarised_mean_NES_df %>%
   unnest(ID) %>%
   filter(ID != "")
 summarised_mean_NES_df <- as.data.frame(summarised_mean_NES_df)
-summarised_mean_NES_df <- merge(summarised_mean_NES_df, proteomics_DE_t_sp3[,c(3,6)])
-summarised_mean_NES_df <- merge(summarised_mean_NES_df, proteomics_DE_t_MTBE[,c(3,6)], by = "ID")
+summarised_mean_NES_df <- merge(summarised_mean_NES_df, proteomics_DE_t_sp3[,c(1,4)])
+summarised_mean_NES_df <- merge(summarised_mean_NES_df, proteomics_DE_t_MTBE[,c(1,4)], by = "ID")
 names(summarised_mean_NES_df) <- c("ID","ocEAn","SP3","MTBE")
+
+summarised_mean_NES_df <- summarised_mean_NES_df %>% group_by(ID) %>% summarise_each(funs(mean(., na.rm = TRUE)))
+summarised_mean_NES_df <- as.data.frame(summarised_mean_NES_df)
 
 cor.test(summarised_mean_NES_df$ocEAn, summarised_mean_NES_df$SP3, method = "kendall")
 cor.test(summarised_mean_NES_df$ocEAn, summarised_mean_NES_df$MTBE, method = "kendall")
@@ -248,10 +253,13 @@ summarised_mean_NES_df_tca <- summarised_mean_NES_df_tca %>%
   unnest(ID) %>%
   filter(ID != "")
 summarised_mean_NES_df_tca <- as.data.frame(summarised_mean_NES_df_tca)
-summarised_mean_NES_df_tca <- merge(summarised_mean_NES_df_tca, proteomics_DE_t_sp3[,c(3,6)])
-summarised_mean_NES_df_tca <- merge(summarised_mean_NES_df_tca, proteomics_DE_t_MTBE[,c(3,6)], by = "ID")
+summarised_mean_NES_df_tca <- merge(summarised_mean_NES_df_tca, proteomics_DE_t_sp3[,c(1,4)])
+summarised_mean_NES_df_tca <- merge(summarised_mean_NES_df_tca, proteomics_DE_t_MTBE[,c(1,4)], by = "ID")
 names(summarised_mean_NES_df_tca) <- c("ID","ocEAn_score","SP3_tvalue","MTBE_tvalue")
 summarised_mean_NES_df_tca <- summarised_mean_NES_df_tca[complete.cases(summarised_mean_NES_df_tca),]
+
+summarised_mean_NES_df_tca <- summarised_mean_NES_df_tca %>% group_by(ID) %>% summarise_each(funs(mean(., na.rm = TRUE)))
+summarised_mean_NES_df_tca <- as.data.frame(summarised_mean_NES_df_tca)
 
 to_hm <- summarised_mean_NES_df_tca
 to_hm <- to_hm[!duplicated(to_hm[,1]),]
@@ -260,8 +268,8 @@ to_hm <- to_hm[,-1]
 
 pheatmap::pheatmap(to_hm, display_numbers = T)
 
-cor.test(to_hm$ocEAn_score, to_hm$SP3_tvalue, method = "kendall")
-cor.test(to_hm$ocEAn_score, to_hm$MTBE_tvalue, method = "kendall")
+cor.test(to_hm$ocEAn_score, to_hm$SP3_tvalue, method = "pearson")
+cor.test(to_hm$ocEAn_score, to_hm$MTBE_tvalue, method = "pearson")
 
 plots <- plotMetaboliteContribution(enzyme = 'SDHA_SDHD_SDHC_SDHB', stat_df = translated_results$t_table, 
                                     metabolite_sets = translated_regulons_df, 
