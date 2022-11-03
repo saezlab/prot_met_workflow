@@ -104,7 +104,7 @@ translated_regulons_df <- translated_regulons_df[,c(3,4,2)]
 ##PROTEO
 proteomics_DE_t_sp3 <- as.data.frame(read_delim("data/proteomics_DE_t_TUvsNG_autoSP3.txt", 
                                             delim = "\t", escape_double = FALSE, 
-                                            trim_ws = TRUE))[,-1]
+                                            trim_ws = TRUE))[,-c(1,2)]
 names(proteomics_DE_t_sp3)[1] <- "ID"
 
 proteomics_DE_t_sp3 <- proteomics_DE_t_sp3 %>%
@@ -114,7 +114,7 @@ proteomics_DE_t_sp3 <- proteomics_DE_t_sp3 %>%
 
 proteomics_DE_t_MTBE <- as.data.frame(read_delim("data/proteomics_DE_t_TUvsNG_MTBE_SP3.txt", 
                                                 delim = "\t", escape_double = FALSE, 
-                                                trim_ws = TRUE))[,-1]
+                                                trim_ws = TRUE))[,-c(1,2)]
 names(proteomics_DE_t_MTBE)[1] <- "ID"
 
 proteomics_DE_t_MTBE <- proteomics_DE_t_MTBE %>%
@@ -266,7 +266,7 @@ to_hm <- to_hm[!duplicated(to_hm[,1]),]
 row.names(to_hm) <- to_hm[,1]
 to_hm <- to_hm[,-1]
 
-pheatmap::pheatmap(to_hm, display_numbers = T)
+pheatmap::pheatmap(to_hm[,c(3,1,2)], display_numbers = T, cluster_cols = F)
 
 cor.test(to_hm$ocEAn_score, to_hm$SP3_tvalue, method = "pearson")
 cor.test(to_hm$ocEAn_score, to_hm$MTBE_tvalue, method = "pearson")
