@@ -39,7 +39,7 @@ t_table <- t_table_metactivity_input_formater(metabolomic_t_table = t_table,
                                               affixes = c("c","l","x","m","e","n","r"))
 
 ##Prepare the metabolic enzyme sets
-penalty_min <- 7 #minimum 1 and integer
+penalty_min <- 1 #minimum 1 and integer
 penalty_max <- 9 #maximum 9 and integer
 
 ######## SUBNETWORKS
@@ -159,7 +159,21 @@ summarised_mean_NES_df <- as.data.frame(summarised_mean_NES_df)
 cor.test(summarised_mean_NES_df$ocEAn, summarised_mean_NES_df$SP3, method = "kendall")
 cor.test(summarised_mean_NES_df$ocEAn, summarised_mean_NES_df$MTBE, method = "kendall")
 
-plots <- plotMetaboliteContribution(enzyme = 'DLD_PDHX_PDHA1_PDHB_DLAT', stat_df = translated_results$t_table, 
+plots <- plotMetaboliteContribution(enzyme = 'SDHA_SDHD_SDHC_SDHB', stat_df = translated_results$t_table, 
+                                    metabolite_sets = translated_regulons_df, 
+                                    contrast_index = 1, stat_name = 'Abundance Down <==> Up (t-value)', 
+                                    scaling_factor = 3, nLabels =  15)
+
+plots$scatter
+
+plots <- plotMetaboliteContribution(enzyme = 'SDHA_SDHB_SDHC_SDHD', stat_df = translated_results$t_table, 
+                                    metabolite_sets = translated_regulons_df, 
+                                    contrast_index = 1, stat_name = 'Abundance Down <==> Up (t-value)', 
+                                    scaling_factor = 3, nLabels =  15)
+
+plots$scatter
+
+plots <- plotMetaboliteContribution(enzyme = 'IDH1', stat_df = translated_results$t_table, 
                                     metabolite_sets = translated_regulons_df, 
                                     contrast_index = 1, stat_name = 'Abundance Down <==> Up (t-value)', 
                                     scaling_factor = 3, nLabels =  15)
@@ -194,6 +208,8 @@ plots <- plotMetaboliteContribution(enzyme = 'IDH3B_IDH3G_IDH3A', stat_df = tran
 
 plot(plots$scatter)
 
+source("scripts/plot_reaction_network.R")
+
 plot_reaction_network(sub_network_nocofact, t_table, mean_NES_df, column_index = 1, vis.height = 2000) %>%
   visSave(file = "results/ocean_network.html")
 
@@ -218,7 +234,7 @@ sub_network_nocofact_tca_att <- sub_network_nocofact_tca_att[sub_network_nocofac
 
 sub_network_nocofact_tca <- list(sub_network_nocofact_tca, sub_network_nocofact_tca_att)
 
-plot_reaction_network(sub_network_nocofact_tca, t_table, mean_NES_df, column_index = 1, vis.height = 2000) %>%
+plot_reaction_network(sub_network_nocofact_tca, t_table, mean_NES_df, column_index = 1, vis.height = 2000, node_font_size = 27) %>%
   visSave(file = "results/ocean_network_tca.html")
 
 tca_prots_clean <- gsub(">.*","",tca_prots)
